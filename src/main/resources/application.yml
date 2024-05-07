@@ -9,3 +9,13 @@ spring:
   h2:
     console:
       enabled: true
+
+application-description: '@project.description@'
+application-version: '@project.version@'
+
+springdoc:
+  packagesToScan: com.coding.exercise.bankapp
+  swagger-ui:
+    path: /swagger-ui
+  api-docs:
+    path: /v3/api-docs

@@ -64,7 +64,7 @@ spring-security-test
 Please find the Rest API documentation in the below url
 
 ```
-http://localhost:8989/bank-api/swagger-ui.html
+http://localhost:8989/bank-api/swagger-ui/index.html
 
 ```
 
@@ -84,8 +84,14 @@ http://localhost:8989/bank-api/h2-console/
 
 2. Browse to <project-root>/src/test/resources to find sample requests to add customer and accounts.
 
+### Image Screen shot
+
+Swagger UI Page
+
+![Swagger UI Page](img/Swagger-UI.png "Swagger UI Page")
 
 ## Authors
 
 * **Shyam Bathina**
+
 

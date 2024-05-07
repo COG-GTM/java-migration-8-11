@@ -1,31 +1,43 @@
 package com.coding.exercise.bankapp.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 @Configuration
-@EnableSwagger2
 public class ApplicationConfig {
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-        		.apiInfo(apiInfo())
-                .select()
-                .paths(PathSelectors.any())
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("bank-service")
+                .pathsToMatch("/**")
                 .build();
     }
-    
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("BANKING APPLICATION REST API")
-        		.description("API for Banking Application.")
-                .version("1.0.0").build();
+
+    @Bean
+    public OpenAPI customOpenAPI(@Value("${application-description}") String appDescription, @Value("${application" +
+            "-version}") String appVersion) {
+        Contact contact = new Contact();
+        contact.setEmail("hendisantika@yahoo.co.id");
+        contact.setName("HENDI SANTIKA");
+        contact.setUrl("https://www.s.id/hendisantika");
+        return new OpenAPI()
+                .info(new Info()
+                        .title("BANKING APPLICATION REST API")
+                        .version(appVersion)
+                        .description(appDescription)
+                        .termsOfService("http://swagger.io/terms/")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
+                        .contact(contact)
+                );
+
     }
+
+
 }
