@@ -15,7 +15,7 @@ public class ApplicationConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("base-service")
+                .group("bank-service")
                 .pathsToMatch("/**")
                 .build();
     }
