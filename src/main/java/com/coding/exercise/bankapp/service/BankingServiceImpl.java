@@ -42,8 +42,23 @@ public class BankingServiceImpl implements BankingService {
     @Autowired
     private BankingServiceHelper bankingServiceHelper;
 
+    public BankingServiceImpl() {
+    }
+    
     public BankingServiceImpl(CustomerRepository repository) {
         this.customerRepository=repository;
+    }
+    
+    public BankingServiceImpl(CustomerRepository customerRepository, 
+                             AccountRepository accountRepository,
+                             TransactionRepository transactionRepository,
+                             CustomerAccountXRefRepository custAccXRefRepository,
+                             BankingServiceHelper bankingServiceHelper) {
+        this.customerRepository = customerRepository;
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
+        this.custAccXRefRepository = custAccXRefRepository;
+        this.bankingServiceHelper = bankingServiceHelper;
     }
     
    
