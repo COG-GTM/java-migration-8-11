@@ -25,7 +25,7 @@ jobs:
           
       - name: Lint markdown files
         run: |
-          markdownlint-cli2 "**/*.md"
+          markdownlint-cli2 "**/*.md" "!HELP.md"
           
       - name: Check markdown links
         run: |

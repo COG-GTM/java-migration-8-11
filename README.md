@@ -289,4 +289,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and contribution gu
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 Copyright (c) 2019 Shyam Bathina
-
