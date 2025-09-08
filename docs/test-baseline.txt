@@ -1,0 +1,107 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--------------------< [0;36mcom.coding.exercise:bank-app[0;1m >--------------------[m
+[[1;34mINFO[m] [1mBuilding BankApp 1.0.0[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:resources[m [1m(default-resources)[m @ [36mbank-app[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 1 resource
+[[1;34mINFO[m] Copying 0 resource
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:compile[m [1m(default-compile)[m @ [36mbank-app[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:testResources[m [1m(default-testResources)[m @ [36mbank-app[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 9 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.0:testCompile[m [1m(default-testCompile)[m @ [36mbank-app[0;1m ---[m
+[[1;34mINFO[m] Nothing to compile - all classes are up to date
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.22.1:test[m [1m(default-test)[m @ [36mbank-app[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m] Running com.coding.exercise.bankapp.[1mBankingApplicationTests[m
+20:24:37.810 [main] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:37.813 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+20:24:37.819 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+20:24:37.833 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.coding.exercise.bankapp.BankingApplicationTests] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+20:24:37.842 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.coding.exercise.bankapp.BankingApplicationTests], using SpringBootContextLoader
+20:24:37.844 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.coding.exercise.bankapp.BankingApplicationTests]: class path resource [com/coding/exercise/bankapp/BankingApplicationTests-context.xml] does not exist
+20:24:37.844 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.coding.exercise.bankapp.BankingApplicationTests]: class path resource [com/coding/exercise/bankapp/BankingApplicationTestsContext.groovy] does not exist
+20:24:37.845 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.coding.exercise.bankapp.BankingApplicationTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+20:24:37.845 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.coding.exercise.bankapp.BankingApplicationTests]: BankingApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:24:37.874 [main] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:37.926 [main] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/home/ubuntu/repos/java-migration-8-11/target/classes/com/coding/exercise/bankapp/BankingApplication.class]
+20:24:37.926 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.coding.exercise.bankapp.BankingApplication for test class com.coding.exercise.bankapp.BankingApplicationTests
+20:24:37.993 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.coding.exercise.bankapp.BankingApplicationTests]: using defaults.
+20:24:37.994 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener]
+20:24:38.007 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@478190fc, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@79e2c065, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@3a93b025, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@35cabb2a, org.springframework.test.context.support.DirtiesContextTestExecutionListener@7e07db1f, org.springframework.test.context.transaction.TransactionalTestExecutionListener@1189dd52, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@36bc55de, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@564fabc8, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@16d04d3d, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@49ec71f8, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@1d2adfbe, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@36902638, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@223d2c72, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@8f4ea7c]
+20:24:38.008 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.008 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.009 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.009 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.009 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.010 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.012 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@130d63be testClass = BankingApplicationTests, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@42a48628 testClass = BankingApplicationTests, locations = '{}', classes = '{class com.coding.exercise.bankapp.BankingApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@27808f31, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@1d8d30f7, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@4923ab24, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@11758f2a], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+20:24:38.013 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.013 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.coding.exercise.bankapp.BankingApplicationTests]
+20:24:38.028 [main] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.1.4.RELEASE)
+
+2025-09-08 20:24:38.228  INFO 8518 --- [           main] c.c.e.bankapp.BankingApplicationTests    : Starting BankingApplicationTests on devin-box with PID 8518 (started by ubuntu in /home/ubuntu/repos/java-migration-8-11)
+2025-09-08 20:24:38.229  INFO 8518 --- [           main] c.c.e.bankapp.BankingApplicationTests    : No active profile set, falling back to default profiles: default
+2025-09-08 20:24:38.942  INFO 8518 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2025-09-08 20:24:38.996  INFO 8518 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 47ms. Found 4 repository interfaces.
+2025-09-08 20:24:39.389  INFO 8518 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7d81ac79] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-09-08 20:24:39.591  INFO 8518 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-09-08 20:24:39.713  INFO 8518 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-09-08 20:24:39.769  INFO 8518 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2025-09-08 20:24:39.811  INFO 8518 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.9.Final}
+2025-09-08 20:24:39.812  INFO 8518 --- [           main] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2025-09-08 20:24:39.899  INFO 8518 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2025-09-08 20:24:39.989  INFO 8518 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2025-09-08 20:24:40.468  INFO 8518 --- [           main] o.h.t.schema.internal.SchemaCreatorImpl  : HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@c94bd18'
+2025-09-08 20:24:40.470  INFO 8518 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-08 20:24:41.253  WARN 8518 --- [           main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-08 20:24:41.507  INFO 8518 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2025-09-08 20:24:41.607  INFO 8518 --- [           main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2025-09-08 20:24:41.882  INFO 8518 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2025-09-08 20:24:42.240  INFO 8518 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4a3516fd, org.springframework.security.web.context.SecurityContextPersistenceFilter@731d0d5c, org.springframework.security.web.header.HeaderWriterFilter@28888124, org.springframework.security.web.authentication.logout.LogoutFilter@4b9beefe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@18e76101, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@690e4b00, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3ba96967, org.springframework.security.web.session.SessionManagementFilter@4b5cdd07, org.springframework.security.web.access.ExceptionTranslationFilter@7f02b2d4, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1e295f7f]
+2025-09-08 20:24:42.390  INFO 8518 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2025-09-08 20:24:42.405  INFO 8518 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2025-09-08 20:24:42.428  INFO 8518 --- [           main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2025-09-08 20:24:42.546  INFO 8518 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_1
+2025-09-08 20:24:42.547  INFO 8518 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_2
+2025-09-08 20:24:42.548  INFO 8518 --- [           main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: handleUsingGET_3
+2025-09-08 20:24:42.567  INFO 8518 --- [           main] c.c.e.bankapp.BankingApplicationTests    : Started BankingApplicationTests in 4.534 seconds (JVM running for 5.018)
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.877 s - in com.coding.exercise.bankapp.[1mBankingApplicationTests[m
+2025-09-08 20:24:42.629  INFO 8518 --- [       Thread-3] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2025-09-08 20:24:42.636  INFO 8518 --- [       Thread-3] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-08 20:24:42.636  INFO 8518 --- [       Thread-3] .SchemaDropperImpl$DelayedDropActionImpl : HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2025-09-08 20:24:42.648  INFO 8518 --- [       Thread-3] o.s.b.f.support.DisposableBeanAdapter    : Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-199]
+2025-09-08 20:24:42.648  INFO 8518 --- [       Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-09-08 20:24:42.649  INFO 8518 --- [       Thread-3] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 1, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  6.370 s
+[[1;34mINFO[m] Finished at: 2025-09-08T20:24:43Z
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
