@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - run: npm -g i markdownlint-cli2 markdown-link-check
-      - run: markdownlint-cli2 "README_NEW.md" "CONTRIBUTING.md"
+      - run: markdownlint-cli2 "README.md" "CONTRIBUTING.md"
       - run: |
           set -e
-          find . -name "README_NEW.md" -o -name "CONTRIBUTING.md" | xargs -n1 markdown-link-check -q || true
+          find . -name "README.md" -o -name "CONTRIBUTING.md" | xargs -n1 markdown-link-check -q || true
