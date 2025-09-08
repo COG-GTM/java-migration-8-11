@@ -1,0 +1,9 @@
+repo: COG-GTM/java-migration-8-11
+language: java
+frameworks: { java: [junit5, mockito] }
+runtime: { jdk: "8", os: "ubuntu-latest" }
+project_type: service
+external_dependencies: []
+coverage_target: { lines: 95, branches: 90, per_file_min: 90, diff: 95 }
+ci: github-actions
+notes: "Aim 95%; stop early if budgets hit; Phase A report-only → Phase B enforce"

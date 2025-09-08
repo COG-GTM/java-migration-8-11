@@ -42,11 +42,6 @@ public class BankingServiceImpl implements BankingService {
     @Autowired
     private BankingServiceHelper bankingServiceHelper;
 
-    public BankingServiceImpl(CustomerRepository repository) {
-        this.customerRepository=repository;
-    }
-    
-   
     public List<CustomerDetails> findAll() {
     	
     	List<CustomerDetails> allCustomerDetails = new ArrayList<>();

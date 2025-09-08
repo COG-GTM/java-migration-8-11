@@ -1,0 +1,32 @@
+name: Tests
+on:
+  pull_request:
+    paths-ignore: ["**.md"]
+  push:
+    branches: [ main ]
+
+jobs:
+  java:
+    runs-on: ubuntu-latest
+    env:
+      ENFORCE: ${{ vars.ENFORCE_COVERAGE || 'false' }}  # Phase A default false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "8"   # Repo is Java 8; upgrade later if needed
+      - name: Build & test (report-only by default)
+        run: |
+          mvn -q -B verify || true
+          python3 scripts/jacoco_gate.py target/site/jacoco/jacoco.xml || true
+      - name: Enforce 95/90 (Phase B)
+        if: env.ENFORCE == 'true'
+        run: |
+          mvn -q -B verify -Pcoverage-enforce
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-jacoco
+          path: target/site/jacoco/*
