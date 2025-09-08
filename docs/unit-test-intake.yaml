@@ -1,0 +1,50 @@
+repo: https://github.com/COG-GTM/java-migration-8-11
+languages: [java]
+frameworks: { java: junit5-jacoco }
+runtimes:
+  java: "1.8"
+project_type: service
+external_dependencies: [h2-database, spring-data-jpa]
+config_env:
+  required: []
+coverage_target: { lines: 80, branches: 70 }
+coverage_current: { lines: 22, branches: 2 }
+coverage_thresholds: { lines: 20, branches: 2 }
+coverage_notes: "Thresholds set to current baseline levels. Future iterations should increase thresholds incrementally toward target of 80% lines, 70% branches."
+ci: github-actions
+notes: "Banking application with Spring Boot - focus on financial transaction logic and customer management"
+
+high_risk_modules:
+  - name: "BankingServiceImpl.transferDetails"
+    priority: 1
+    reason: "Critical fund transfer logic with balance validation, transaction creation, and concurrency control"
+    file: "src/main/java/com/coding/exercise/bankapp/service/BankingServiceImpl.java"
+    methods: ["transferDetails"]
+  
+  - name: "BankingServiceImpl.updateCustomer" 
+    priority: 2
+    reason: "Complex customer update logic with nested object handling and validation"
+    file: "src/main/java/com/coding/exercise/bankapp/service/BankingServiceImpl.java"
+    methods: ["updateCustomer", "addCustomer", "deleteCustomer"]
+    
+  - name: "BankingServiceImpl.addNewAccount"
+    priority: 3
+    reason: "Account creation with cross-reference table management"
+    file: "src/main/java/com/coding/exercise/bankapp/service/BankingServiceImpl.java" 
+    methods: ["addNewAccount", "findByAccountNumber"]
+    
+  - name: "BankingServiceHelper"
+    priority: 4
+    reason: "Data conversion utilities between domain and entity objects - critical for data integrity"
+    file: "src/main/java/com/coding/exercise/bankapp/service/helper/BankingServiceHelper.java"
+    methods: ["convertToCustomerDomain", "convertToCustomerEntity", "convertToAccountDomain", "createTransaction"]
+    
+  - name: "Controllers"
+    priority: 5
+    reason: "REST endpoint validation and error handling"
+    files: ["src/main/java/com/coding/exercise/bankapp/controller/AccountController.java", "src/main/java/com/coding/exercise/bankapp/controller/CustomerController.java"]
+
+baseline_coverage:
+  current_tests: 1
+  current_coverage_estimate: "0% business logic"
+  test_execution_time: "4.6 seconds"
