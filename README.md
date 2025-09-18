@@ -52,16 +52,15 @@ spring-boot-starter-web
 spring-boot-devtools
 h2 - Inmemory database
 lombok - to reduce boilerplate code
-springfox-swagger2
-springfox-swagger-ui
+springdoc-openapi-ui - API documentation (OpenAPI 3.0)
 spring-boot-starter-test
 spring-security-test
 
 ```
 
-## Swagger
+## API Documentation
 
-Please find the Rest API documentation in the below url
+Please find the Rest API documentation (OpenAPI 3.0) in the below url
 
 ```
 http://localhost:8989/bank-api/swagger-ui.html
