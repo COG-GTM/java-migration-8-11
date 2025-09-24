@@ -37,7 +37,7 @@ for testing, and students studying enterprise Java application architecture.
 
 ### Prerequisites
 
-- Java 8 or higher
+- Java 11 or higher
 - Maven 3.6+ (or use included Maven wrapper)
 - Any modern IDE (Spring Tool Suite, IntelliJ IDEA, Eclipse)
 
@@ -48,6 +48,23 @@ $ git clone https://github.com/COG-GTM/java-migration-8-11.git
 $ cd java-migration-8-11
 $ mvn clean install
 $ mvn spring-boot:run
+```
+
+**Environment Setup for Java 11:**
+
+Ensure your `JAVA_HOME` environment variable points to your Java 11 installation:
+
+```bash
+# Linux/macOS
+export JAVA_HOME=/path/to/java11
+export PATH=$JAVA_HOME/bin:$PATH
+
+# Windows
+set JAVA_HOME=C:\path\to\java11
+set PATH=%JAVA_HOME%\bin;%PATH%
+
+# Verify Java version
+java -version
 ```
 
 ### Verify Installation
@@ -311,7 +328,7 @@ The application includes Spring Boot integration tests that verify:
 | Port 8989 already in use | Another app using the port | Change `server.port` or kill process |
 | 401 Unauthorized | Missing or incorrect credentials | Use `bankapp:changeit` for basic auth |
 | H2 Console not accessible | Security configuration issue | Set `spring.h2.console.enabled=true` |
-| Maven build fails | Missing Java 8 | Install Java 8 and set `JAVA_HOME` |
+| Maven build fails | Missing Java 11 | Install Java 11 and set `JAVA_HOME` |
 | Swagger UI not loading | Context path configuration | Access via `/bank-api/swagger-ui.html` |
 
 ## Deployment
