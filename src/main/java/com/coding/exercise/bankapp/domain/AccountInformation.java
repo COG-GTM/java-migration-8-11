@@ -2,6 +2,8 @@ package com.coding.exercise.bankapp.domain;
 
 import java.util.Date;
 
+import com.coding.exercise.bankapp.model.AccountStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +21,7 @@ public class AccountInformation {
 	
 	private BankInformation bankInformation;
 	
-	private String accountStatus;
+	private AccountStatus accountStatus;
 	
 	private String accountType;
 	

@@ -2,7 +2,7 @@
     "accountBalance": 4352,
     "accountCreated": "2019-05-05T22:01:05.964Z",
     "accountNumber": 3000,    
-    "accountStatus": "Active",    
+    "accountStatus": "ACTIVE",    
     "accountType": "Checking",
     "bankInformation": {
       "branchAddress": {

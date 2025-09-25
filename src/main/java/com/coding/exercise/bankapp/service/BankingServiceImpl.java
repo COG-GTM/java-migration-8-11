@@ -16,6 +16,7 @@ import com.coding.exercise.bankapp.domain.CustomerDetails;
 import com.coding.exercise.bankapp.domain.TransactionDetails;
 import com.coding.exercise.bankapp.domain.TransferDetails;
 import com.coding.exercise.bankapp.model.Account;
+import com.coding.exercise.bankapp.model.AccountStatus;
 import com.coding.exercise.bankapp.model.Address;
 import com.coding.exercise.bankapp.model.Contact;
 import com.coding.exercise.bankapp.model.Customer;
@@ -197,7 +198,10 @@ public class BankingServiceImpl implements BankingService {
 		Optional<Customer> customerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
 
 		if(customerEntityOpt.isPresent()) {
-			accountRepository.save(bankingServiceHelper.convertToAccountEntity(accountInformation));
+			Account newAccount = bankingServiceHelper.convertToAccountEntity(accountInformation);
+			newAccount.setAccountStatus(AccountStatus.ACTIVE);
+			newAccount.setCreateDateTime(new Date());
+			accountRepository.save(newAccount);
 			
 			// Add an entry to the CustomerAccountXRef
 			custAccXRefRepository.save(CustomerAccountXRef.builder()
@@ -232,6 +236,9 @@ public class BankingServiceImpl implements BankingService {
 			Optional<Account> fromAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getFromAccountNumber());
 			if(fromAccountEntityOpt.isPresent()) {
 				fromAccountEntity = fromAccountEntityOpt.get();
+				if (fromAccountEntity.getAccountStatus() != AccountStatus.ACTIVE) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("From Account " + transferDetails.getFromAccountNumber() + " is not active. Status: " + fromAccountEntity.getAccountStatus());
+				}
 			}
 			else {
 			// if from request does not exist, 404 Bad Request
@@ -243,6 +250,9 @@ public class BankingServiceImpl implements BankingService {
 			Optional<Account> toAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getToAccountNumber());
 			if(toAccountEntityOpt.isPresent()) {
 				toAccountEntity = toAccountEntityOpt.get();
+				if (toAccountEntity.getAccountStatus() != AccountStatus.ACTIVE) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("To Account " + transferDetails.getToAccountNumber() + " is not active. Status: " + toAccountEntity.getAccountStatus());
+				}
 			}
 			else {
 			// if from request does not exist, 404 Bad Request
@@ -307,5 +317,73 @@ public class BankingServiceImpl implements BankingService {
 		return transactionDetails;
 	}
 
+	/**
+	 * Suspend an account
+	 * 
+	 * @param accountNumber
+	 * @return
+	 */
+	public ResponseEntity<Object> suspendAccount(String accountNumber) {
+		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(Long.valueOf(accountNumber));
+		
+		if (accountEntityOpt.isPresent()) {
+			Account account = accountEntityOpt.get();
+			if (account.getAccountStatus() == AccountStatus.CLOSED) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot suspend a closed account.");
+			}
+			account.setAccountStatus(AccountStatus.SUSPENDED);
+			account.setUpdateDateTime(new Date());
+			accountRepository.save(account);
+			return ResponseEntity.status(HttpStatus.OK).body("Account " + accountNumber + " suspended successfully.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account Number " + accountNumber + " not found.");
+		}
+	}
+
+	/**
+	 * Reactivate an account
+	 * 
+	 * @param accountNumber
+	 * @return
+	 */
+	public ResponseEntity<Object> reactivateAccount(String accountNumber) {
+		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(Long.valueOf(accountNumber));
+		
+		if (accountEntityOpt.isPresent()) {
+			Account account = accountEntityOpt.get();
+			if (account.getAccountStatus() == AccountStatus.CLOSED) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot reactivate a closed account.");
+			}
+			account.setAccountStatus(AccountStatus.ACTIVE);
+			account.setUpdateDateTime(new Date());
+			accountRepository.save(account);
+			return ResponseEntity.status(HttpStatus.OK).body("Account " + accountNumber + " reactivated successfully.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account Number " + accountNumber + " not found.");
+		}
+	}
+
+	/**
+	 * Close an account
+	 * 
+	 * @param accountNumber
+	 * @return
+	 */
+	public ResponseEntity<Object> closeAccount(String accountNumber) {
+		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(Long.valueOf(accountNumber));
+		
+		if (accountEntityOpt.isPresent()) {
+			Account account = accountEntityOpt.get();
+			if (account.getAccountBalance() > 0) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot close account with positive balance. Current balance: " + account.getAccountBalance());
+			}
+			account.setAccountStatus(AccountStatus.CLOSED);
+			account.setUpdateDateTime(new Date());
+			accountRepository.save(account);
+			return ResponseEntity.status(HttpStatus.OK).body("Account " + accountNumber + " closed successfully.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account Number " + accountNumber + " not found.");
+		}
+	}
 
 }
