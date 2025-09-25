@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.OptimisticLockException;
+
 import com.coding.exercise.bankapp.domain.AccountInformation;
 import com.coding.exercise.bankapp.domain.CustomerDetails;
 import com.coding.exercise.bankapp.domain.TransactionDetails;
@@ -255,26 +257,42 @@ public class BankingServiceImpl implements BankingService {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient Funds.");
 			}
 			else {
-				synchronized (this) {
-					// update FROM ACCOUNT 
-					fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
-					fromAccountEntity.setUpdateDateTime(new Date());
-					accountEntities.add(fromAccountEntity);
-					
-					// update TO ACCOUNT
-					toAccountEntity.setAccountBalance(toAccountEntity.getAccountBalance() + transferDetails.getTransferAmount());
-					toAccountEntity.setUpdateDateTime(new Date());
-					accountEntities.add(toAccountEntity);
-					
-					accountRepository.saveAll(accountEntities);
-					
-					// Create transaction for FROM Account
-					Transaction fromTransaction = bankingServiceHelper.createTransaction(transferDetails, fromAccountEntity.getAccountNumber(), "DEBIT");
-					transactionRepository.save(fromTransaction);
-					
-					// Create transaction for TO Account
-					Transaction toTransaction = bankingServiceHelper.createTransaction(transferDetails, toAccountEntity.getAccountNumber(), "CREDIT");
-					transactionRepository.save(toTransaction);
+				boolean transferred = false;
+				int maxRetries = 3;
+				int attempts = 0;
+
+				while (!transferred && attempts < maxRetries) {
+					try {
+						// update FROM ACCOUNT 
+						fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
+						fromAccountEntity.setUpdateDateTime(new Date());
+						accountEntities.add(fromAccountEntity);
+						
+						// update TO ACCOUNT
+						toAccountEntity.setAccountBalance(toAccountEntity.getAccountBalance() + transferDetails.getTransferAmount());
+						toAccountEntity.setUpdateDateTime(new Date());
+						accountEntities.add(toAccountEntity);
+						
+						accountRepository.saveAll(accountEntities);
+						
+						// Create transaction for FROM Account
+						Transaction fromTransaction = bankingServiceHelper.createTransaction(transferDetails, fromAccountEntity.getAccountNumber(), "DEBIT");
+						transactionRepository.save(fromTransaction);
+						
+						// Create transaction for TO Account
+						Transaction toTransaction = bankingServiceHelper.createTransaction(transferDetails, toAccountEntity.getAccountNumber(), "CREDIT");
+						transactionRepository.save(toTransaction);
+						
+						transferred = true;
+					} catch (OptimisticLockException e) {
+						attempts++;
+						if (attempts >= maxRetries) {
+							throw new RuntimeException("Failed to process transfer after multiple attempts due to concurrent modifications", e);
+						}
+						fromAccountEntity = accountRepository.findByAccountNumber(transferDetails.getFromAccountNumber()).get();
+						toAccountEntity = accountRepository.findByAccountNumber(transferDetails.getToAccountNumber()).get();
+						accountEntities.clear();
+					}
 				}
 
 				return ResponseEntity.status(HttpStatus.OK).body("Success: Amount transferred for Customer Number " + customerNumber);

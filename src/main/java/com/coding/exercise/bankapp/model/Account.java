@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,4 +47,7 @@ public class Account {
 	
     @Temporal(TemporalType.TIME)
 	private Date updateDateTime;
+	
+	@Version
+	private Long version;
 }
