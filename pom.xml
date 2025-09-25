@@ -5,6 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
+		<!-- Upgraded from 2.1.4.RELEASE to 2.7.18 for security patches, performance improvements, 
+		     and latest Java 8 compatible version with 4+ years of dependency updates -->
 		<version>2.7.18</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
@@ -51,6 +53,9 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- Springfox Swagger dependencies removed due to incompatibility with Spring Boot 2.7.x
+		     Original dependencies: springfox-swagger2 (2.9.2) and springfox-swagger-ui (2.9.2)
+		     Migration to SpringDoc OpenAPI recommended for API documentation restoration -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
