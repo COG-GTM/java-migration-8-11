@@ -75,4 +75,34 @@ public class AccountController {
 
 		return bankingService.findTransactionsByAccountNumber(accountNumber);
 	}
+
+	@PutMapping(path = "/suspend/{accountNumber}")
+	@ApiOperation(value = "Suspend account", notes = "Suspend an account by account number")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 400, message = "Bad Request"),
+			@ApiResponse(code = 404, message = "Account Not Found"),
+			@ApiResponse(code = 500, message = "Internal Server Error") })
+	public ResponseEntity<Object> suspendAccount(@PathVariable String accountNumber) {
+		return bankingService.suspendAccount(accountNumber);
+	}
+
+	@PutMapping(path = "/reactivate/{accountNumber}")
+	@ApiOperation(value = "Reactivate account", notes = "Reactivate a suspended account by account number")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 400, message = "Bad Request"),
+			@ApiResponse(code = 404, message = "Account Not Found"),
+			@ApiResponse(code = 500, message = "Internal Server Error") })
+	public ResponseEntity<Object> reactivateAccount(@PathVariable String accountNumber) {
+		return bankingService.reactivateAccount(accountNumber);
+	}
+
+	@PutMapping(path = "/close/{accountNumber}")
+	@ApiOperation(value = "Close account", notes = "Close an account by account number")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 400, message = "Bad Request"),
+			@ApiResponse(code = 404, message = "Account Not Found"),
+			@ApiResponse(code = 500, message = "Internal Server Error") })
+	public ResponseEntity<Object> closeAccount(@PathVariable String accountNumber) {
+		return bankingService.closeAccount(accountNumber);
+	}
 }

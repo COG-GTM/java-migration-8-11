@@ -2,7 +2,7 @@
     "accountBalance": 6150,
     "accountCreated": "2019-05-05T22:01:05.964Z",
     "accountNumber": 3001,    
-    "accountStatus": "Active",    
+    "accountStatus": "ACTIVE",    
     "accountType": "Saving",
     "bankInformation": {
       "branchAddress": {

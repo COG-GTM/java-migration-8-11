@@ -6,6 +6,8 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,7 +37,8 @@ public class Account {
 	@OneToOne(cascade=CascadeType.ALL)
 	private BankInfo bankInformation;
 	
-	private String accountStatus;
+	@Enumerated(EnumType.STRING)
+	private AccountStatus accountStatus;
 	
 	private String accountType;
 	
