@@ -5,7 +5,9 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.4.RELEASE</version>
+		<!-- Upgraded from 2.1.4.RELEASE to 2.7.18 for Java 11 compatibility, 
+		     security patches, and performance improvements -->
+		<version>2.7.18</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.coding.exercise</groupId>
@@ -15,7 +17,7 @@
 	<description>Bank App Spring Boot Project</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
@@ -51,15 +53,12 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- SpringDoc OpenAPI for Java 11 and Spring Boot 2.7.x compatibility
+		     Replaces SpringFox Swagger2 (2.9.2) and SpringFox Swagger UI (2.9.2) -->
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.15</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
