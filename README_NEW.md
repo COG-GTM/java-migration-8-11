@@ -37,7 +37,7 @@ for testing, and students studying enterprise Java application architecture.
 
 ### Prerequisites
 
-- Java 8 or higher
+- Java 11 or higher
 - Maven 3.6+ (or use included Maven wrapper)
 - Any modern IDE (Spring Tool Suite, IntelliJ IDEA, Eclipse)
 
