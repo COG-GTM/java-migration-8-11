@@ -12,7 +12,9 @@ After updating to Java 11, developers need to configure their IDE to use Java 11
 ### Eclipse / Spring Tool Suite (STS)
 
 1. **Install Java 11 JDK**
-   - Download and install Java 11 JDK from [Oracle](https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html) or [AdoptOpenJDK](https://adoptopenjdk.net/)
+   - Download and install Java 11 JDK from
+     [Oracle](https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html)
+     or [AdoptOpenJDK](https://adoptopenjdk.net/)
    - Set JAVA_HOME environment variable to Java 11 installation path
 
 2. **Configure Eclipse JDK**
@@ -36,7 +38,7 @@ After updating to Java 11, developers need to configure their IDE to use Java 11
    - Click `Apply and Close`
 
 5. **Enable Lombok**
-   - Download lombok.jar from https://projectlombok.org/download
+   - Download lombok.jar from <https://projectlombok.org/download>
    - Run: `java -jar lombok.jar`
    - Select Eclipse installation directory and click `Install/Update`
    - Restart Eclipse
@@ -94,6 +96,7 @@ After updating to Java 11, developers need to configure their IDE to use Java 11
    - Open Settings (Ctrl+,) or `File > Preferences > Settings`
    - Search for "java.configuration.runtimes"
    - Edit in settings.json:
+
      ```json
      "java.configuration.runtimes": [
        {
@@ -128,7 +131,7 @@ mvn test
 mvn spring-boot:run
 ```
 
-Access the application at: http://localhost:8989/bank-api/swagger-ui.html
+Access the application at: <http://localhost:8989/bank-api/swagger-ui.html>
 
 ## Coding Standards
 
