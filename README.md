@@ -1,4 +1,4 @@
-# Banking Application using Java8, Spring Boot, Spring Security and H2 DB
+# Banking Application using Java 11, Spring Boot, Spring Security and H2 DB
 
 RESTful API to simulate simple banking operations. 
 
@@ -38,9 +38,9 @@ https://projectlombok.org/setup/eclipse
 
 ### Prerequisites
 
-* Java 8
+* Java 11 JDK (ensure JAVA_HOME environment variable is set to Java 11 installation)
 * Spring Tool Suite 4 or similar IDE
-* [Maven](https://maven.apache.org/) - Dependency Management
+* [Maven](https://maven.apache.org/) 3.6+ - Dependency Management
 
 ### Maven Dependencies
 
@@ -52,8 +52,7 @@ spring-boot-starter-web
 spring-boot-devtools
 h2 - Inmemory database
 lombok - to reduce boilerplate code
-springfox-swagger2
-springfox-swagger-ui
+springdoc-openapi-ui - OpenAPI 3.0 documentation
 spring-boot-starter-test
 spring-security-test
 
@@ -64,9 +63,11 @@ spring-security-test
 Please find the Rest API documentation in the below url
 
 ```
-http://localhost:8989/bank-api/swagger-ui.html
+http://localhost:8989/bank-api/swagger-ui/index.html
 
 ```
+
+Note: SpringDoc OpenAPI uses a different URL pattern than the legacy Springfox implementation.
 
 ## H2 In-Memory Database
 
