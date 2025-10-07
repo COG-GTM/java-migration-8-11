@@ -6,6 +6,9 @@ spring.security.user.password: changeit
 
 # Enabling H2 Console
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   h2:
     console:
       enabled: true
