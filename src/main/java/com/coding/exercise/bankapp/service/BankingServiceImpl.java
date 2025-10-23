@@ -287,7 +287,7 @@ public class BankingServiceImpl implements BankingService {
 	}
 
 	/**
-	 * Get all transactions for a specific account
+	 * Get all transactions for a specific account from the last 60 days
 	 * 
 	 * @param accountNumber
 	 * @return
@@ -296,7 +296,11 @@ public class BankingServiceImpl implements BankingService {
 		List<TransactionDetails> transactionDetails = new ArrayList<>();
 		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(accountNumber);
 		if(accountEntityOpt.isPresent()) {
-			Optional<List<Transaction>> transactionEntitiesOpt = transactionRepository.findByAccountNumber(accountNumber);
+			java.util.Calendar cal = java.util.Calendar.getInstance();
+			cal.add(java.util.Calendar.DAY_OF_MONTH, -60);
+			Date cutoffDate = cal.getTime();
+			
+			Optional<List<Transaction>> transactionEntitiesOpt = transactionRepository.findByAccountNumberAndTxDateTimeAfter(accountNumber, cutoffDate);
 			if(transactionEntitiesOpt.isPresent()) {
 				transactionEntitiesOpt.get().forEach(transaction -> {
 					transactionDetails.add(bankingServiceHelper.convertToTransactionDomain(transaction));
