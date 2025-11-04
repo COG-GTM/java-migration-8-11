@@ -38,7 +38,7 @@ https://projectlombok.org/setup/eclipse
 
 ### Prerequisites
 
-* Java 8
+* Java 11
 * Spring Tool Suite 4 or similar IDE
 * [Maven](https://maven.apache.org/) - Dependency Management
 
@@ -52,8 +52,7 @@ spring-boot-starter-web
 spring-boot-devtools
 h2 - Inmemory database
 lombok - to reduce boilerplate code
-springfox-swagger2
-springfox-swagger-ui
+springdoc-openapi-ui
 spring-boot-starter-test
 spring-security-test
 
@@ -64,7 +63,7 @@ spring-security-test
 Please find the Rest API documentation in the below url
 
 ```
-http://localhost:8989/bank-api/swagger-ui.html
+http://localhost:8989/bank-api/swagger-ui/index.html
 
 ```
 
