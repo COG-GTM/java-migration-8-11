@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: bankapp-postgres
+    environment:
+      POSTGRES_DB: bankapp
+      POSTGRES_USER: bankapp
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-changeit}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - bankapp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bankapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql:
+    image: mysql:8.0
+    container_name: bankapp-mysql
+    environment:
+      MYSQL_DATABASE: bankapp
+      MYSQL_USER: bankapp
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-changeit}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - bankapp-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  bankapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bankapp
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      DATABASE_URL: ${DATABASE_URL:-jdbc:postgresql://postgres:5432/bankapp}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-bankapp}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-changeit}
+      SPRING_SECURITY_USER_NAME: ${SPRING_SECURITY_USER_NAME:-bankapp}
+      SPRING_SECURITY_USER_PASSWORD: ${SPRING_SECURITY_USER_PASSWORD:-changeit}
+    ports:
+      - "8989:8989"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bankapp-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  mysql-data:
+
+networks:
+  bankapp-network:
+    driver: bridge

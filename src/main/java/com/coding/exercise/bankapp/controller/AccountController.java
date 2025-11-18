@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("accounts")
+@RequestMapping("/v1/accounts")
 @Api(tags = { "Accounts and Transactions REST endpoints" })
 public class AccountController {
 

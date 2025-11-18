@@ -1,11 +1,100 @@
 server.port: 8989
 server.servlet.context-path: /bank-api
 
-spring.security.user.name: bankapp
-spring.security.user.password: changeit
-
-# Enabling H2 Console
 spring:
+  security:
+    user:
+      name: ${SPRING_SECURITY_USER_NAME:bankapp}
+      password: ${SPRING_SECURITY_USER_PASSWORD:changeit}
+  h2:
+    console:
+      enabled: ${H2_CONSOLE_ENABLED:true}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+logging:
+  level:
+    root: INFO
+    com.coding.exercise.bankapp: ${LOG_LEVEL:INFO}
+    org.springframework.web: INFO
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: ${LOG_FILE:logs/bankapp.log}
+    max-size: 10MB
+    max-history: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
   h2:
     console:
       enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  h2:
+    console:
+      enabled: false
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/bankapp}
+    username: ${DATABASE_USERNAME:bankapp}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  h2:
+    console:
+      enabled: false
+  datasource:
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/bankapp}
+    username: ${DATABASE_USERNAME:bankapp}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
