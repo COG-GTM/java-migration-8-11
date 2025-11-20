@@ -37,7 +37,7 @@ for testing, and students studying enterprise Java application architecture.
 
 ### Prerequisites
 
-- Java 8 or higher
+- Java 11 or higher
 - Maven 3.6+ (or use included Maven wrapper)
 - Any modern IDE (Spring Tool Suite, IntelliJ IDEA, Eclipse)
 
@@ -57,7 +57,7 @@ $ mvn spring-boot:run
 $ curl -u bankapp:changeit -i http://localhost:8989/bank-api/actuator/health
 
 # Access Swagger documentation
-$ open http://localhost:8989/bank-api/swagger-ui.html
+$ open http://localhost:8989/bank-api/swagger-ui/index.html
 
 # Access H2 database console (use JDBC URL: jdbc:h2:mem:testdb)
 $ open http://localhost:8989/bank-api/h2-console/
@@ -66,7 +66,7 @@ $ open http://localhost:8989/bank-api/h2-console/
 ## Configuration
 
 | Configuration Property | Required | Default | Description |
-|----------------------|----------|---------|-------------|
+| ---------------------- | ---------- | --------- | ------------- |
 | server.port | No | 8989 | Application server port |
 | server.servlet.context-path | No | /bank-api | Base path for all endpoints |
 | spring.security.user.name | No | bankapp | Basic auth username |
@@ -180,7 +180,7 @@ $ curl -u bankapp:changeit http://localhost:8989/bank-api/accounts/transactions/
 
 ### Interactive API Documentation
 
-Visit [http://localhost:8989/bank-api/swagger-ui.html](http://localhost:8989/bank-api/swagger-ui.html)
+Visit [http://localhost:8989/bank-api/swagger-ui/index.html](http://localhost:8989/bank-api/swagger-ui/index.html)
 for complete API documentation with interactive testing capabilities.
 
 ## API Endpoints
@@ -277,7 +277,7 @@ $ mvn test
 - **Lombok**: Reduces boilerplate code (getters, setters, constructors)
 - **Spring Boot DevTools**: Automatic restart during development
 - **H2 Console**: Database inspection at `/h2-console/`
-- **Swagger UI**: API testing at `/swagger-ui.html`
+- **Swagger UI**: API testing at `/swagger-ui/index.html`
 
 ## Testing
 
@@ -298,7 +298,7 @@ The application includes Spring Boot integration tests that verify:
 ### Manual Testing
 
 1. Start the application: `mvn spring-boot:run`
-2. Access Swagger UI: <http://localhost:8989/bank-api/swagger-ui.html>
+2. Access Swagger UI: <http://localhost:8989/bank-api/swagger-ui/index.html>
 3. Use the interactive documentation to test API endpoints
 4. Monitor database state via H2 Console: <http://localhost:8989/bank-api/h2-console/>
 
@@ -307,12 +307,12 @@ The application includes Spring Boot integration tests that verify:
 ### Common Issues
 
 | Symptom | Cause | Solution |
-|---------|-------|----------|
+| --------- | ------- | ---------- |
 | Port 8989 already in use | Another app using the port | Change `server.port` or kill process |
 | 401 Unauthorized | Missing or incorrect credentials | Use `bankapp:changeit` for basic auth |
 | H2 Console not accessible | Security configuration issue | Set `spring.h2.console.enabled=true` |
-| Maven build fails | Missing Java 8 | Install Java 8 and set `JAVA_HOME` |
-| Swagger UI not loading | Context path configuration | Access via `/bank-api/swagger-ui.html` |
+| Maven build fails | Missing Java 11 | Install Java 11 and set `JAVA_HOME` |
+| Swagger UI not loading | Context path configuration | Use `/bank-api/swagger-ui/index.html` |
 
 ## Deployment
 
