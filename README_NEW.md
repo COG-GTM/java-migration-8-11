@@ -66,7 +66,7 @@ $ open http://localhost:8989/bank-api/h2-console/
 ## Configuration
 
 | Configuration Property | Required | Default | Description |
-|----------------------|----------|---------|-------------|
+| ---------------------- | -------- | ------- | ----------- |
 | server.port | No | 8989 | Application server port |
 | server.servlet.context-path | No | /bank-api | Base path for all endpoints |
 | spring.security.user.name | No | bankapp | Basic auth username |
@@ -307,7 +307,7 @@ The application includes Spring Boot integration tests that verify:
 ### Common Issues
 
 | Symptom | Cause | Solution |
-|---------|-------|----------|
+| ------- | ----- | -------- |
 | Port 8989 already in use | Another app using the port | Change `server.port` or kill process |
 | 401 Unauthorized | Missing or incorrect credentials | Use `bankapp:changeit` for basic auth |
 | H2 Console not accessible | Security configuration issue | Set `spring.h2.console.enabled=true` |
