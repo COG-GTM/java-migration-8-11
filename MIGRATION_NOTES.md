@@ -26,13 +26,24 @@ This document summarizes the changes made to migrate the BankApp from Java 8 to 
 - Spring Boot already includes JAXB API and activation API as transitive dependencies
 - No code changes required as Spring Boot handles JAXB integration
 
-### 3. CI/CD Updates
+### 3. Source Code Changes
+
+**Swagger Migration (Springfox to SpringDoc OpenAPI)**:
+- Replaced `io.springfox` dependencies with `org.springdoc:springdoc-openapi-ui:1.6.15`
+- Updated controller annotations from Springfox (`@Api`, `@ApiOperation`) to SpringDoc (`@Tag`, `@Operation`)
+- Rewrote `ApplicationConfig.java` to use SpringDoc configuration instead of Springfox Docket
+
+**Test Framework Migration (JUnit 4 to JUnit 5)**:
+- Updated test classes to use JUnit 5 annotations (`@Test` from `org.junit.jupiter.api`)
+- Spring Boot 2.7.x includes JUnit 5 by default via `spring-boot-starter-test`
+
+### 4. CI/CD Updates
 
 **GitHub Actions**:
-- Created new workflow file `.github/workflows/java-ci.yml`
+- Created workflow file `.github/workflows/ci.yml` for Java 11 builds
 - Configured to use JDK 11 with Temurin distribution
 - Added Maven caching for improved build performance
-- Runs compile, test, and package steps on push and pull requests
+- Runs compile, test, and verify steps on push and pull requests
 
 ### 4. Runtime Environment
 
@@ -64,10 +75,9 @@ This document summarizes the changes made to migrate the BankApp from Java 8 to 
 3. **Language Features**: Ready for future adoption of Java 9-11 language features
 4. **Long-term Support**: Java 11 LTS provides extended support lifecycle
 
-## No Changes Required
+## Areas With Minimal Changes
 
-The following areas required no modifications:
-- **Source Code**: No code changes needed, all existing Java 8 code compatible
+The following areas required no or minimal modifications:
 - **TLS Configuration**: Application uses Spring Boot defaults, no custom TLS setup
 - **GC Logging**: No custom GC logging was configured, using Java 11 defaults
 - **Module System**: Staying on classpath (not adopting JPMS modules)
