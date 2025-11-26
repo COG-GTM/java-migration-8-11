@@ -80,6 +80,8 @@ The following files will require modifications during this migration:
 
 **Rationale**: Spring Boot 2.7.18 is the final release of the 2.7.x line (released November 2023) and provides full Java 11 support while maintaining backward compatibility. It includes security patches, bug fixes, and dependency updates. Spring Boot 2.1.4.RELEASE from April 2019 is no longer receiving updates.
 
+**Important**: Spring Boot 2.7.x reached end-of-life (EOL) in November 2023. This migration should be treated as an interim step toward Java 11 compatibility, not a long-term destination. After completing this migration, plan for a subsequent upgrade to Spring Boot 3.x with Java 17.
+
 **Note**: All Spring Boot starter dependencies (actuator, data-jpa, security, web, devtools, test) inherit their versions from the parent POM and will automatically upgrade.
 
 ### 1.3 Swagger Migration (Springfox to SpringDoc)
@@ -161,13 +163,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .authorizeHttpRequests(auth -> auth
-                .antMatchers("/").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/", "/h2-console/**").permitAll()
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .csrf().disable()
-            .headers().frameOptions().disable();
+            .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
         
         return httpSecurity.build();
     }
@@ -178,8 +179,11 @@ public class SecurityConfig {
 - Remove inheritance from `WebSecurityConfigurerAdapter`
 - Add `@EnableWebSecurity` annotation
 - Replace `configure(HttpSecurity)` method with `SecurityFilterChain` bean
-- Use lambda-based configuration with `authorizeHttpRequests()`
-- Add SpringDoc endpoints to permitted paths
+- Use lambda-based configuration with `authorizeHttpRequests()` and `requestMatchers()` (note: `antMatchers()` is deprecated in Spring Security 5.8+ and replaced with `requestMatchers()`)
+- Add SpringDoc endpoints to permitted paths (including `/swagger-ui.html` explicitly)
+- Use lambda-style configuration for `csrf()` and `headers()` to avoid deprecation warnings
+
+**Important Behavior Change**: The addition of `.anyRequest().authenticated()` makes authentication explicit for all non-whitelisted endpoints. The current configuration does not have this explicit rule, so verify which endpoints should be public vs. authenticated before and after applying this change.
 
 ### 2.2 Swagger/OpenAPI Configuration Update
 
@@ -300,7 +304,7 @@ springdoc:
 
 **Key Changes**:
 - Restructured YAML for consistency
-- Added `spring.mvc.pathmatch.matching-strategy` for backward compatibility
+- Added `spring.mvc.pathmatch.matching-strategy` for backward compatibility (note: this setting was primarily a workaround for Springfox compatibility with Spring Boot 2.6+; with SpringDoc, it may be optional and can be removed if you encounter path matching issues)
 - Added SpringDoc configuration to maintain the same Swagger UI URL path
 
 ### 3.2 Swagger UI URL Change
@@ -502,6 +506,8 @@ After deployment, monitor for:
 ---
 
 ## Appendix: Complete pom.xml After Migration
+
+**Note**: The following is an illustrative example based on the current project structure. Do not blindly copy-paste this file to replace your existing `pom.xml`. Instead, adapt the changes (Java version, Spring Boot version, Swagger dependencies) to your current `pom.xml` to avoid accidentally removing any additional dependencies or plugins that may have been added to your project.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
