@@ -21,10 +21,10 @@ jobs:
         cache: maven
     
     - name: Compile with Maven
-      run: mvn clean compile -B
+      run: mvn -B -e clean compile
     
     - name: Run tests
-      run: mvn test -B
+      run: mvn -B test
     
-    - name: Package application
-      run: mvn package -B -DskipTests
+    - name: Verify build
+      run: mvn -B -e -DskipTests clean verify

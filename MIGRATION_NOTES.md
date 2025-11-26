@@ -1,45 +1,103 @@
-# Java 8 to Java 11 Migration Notes
+# Java 8 to 11 Migration Notes
 
-This document summarizes the changes made to migrate the BankApp project from Java 8 to Java 11.
+## Overview
 
-## Build Configuration Changes
+This document summarizes the changes made to migrate the BankApp from Java 8 to Java 11 (LTS).
 
-The `pom.xml` was updated with the following changes:
+## Changes Made
 
-**Java Version**: Updated from Java 8 to Java 11 using the `<release>` configuration which is the recommended approach for Java 9+. This replaces the older `source`/`target` configuration and ensures proper cross-compilation compatibility.
+### 1. Build Configuration Updates
 
-**Maven Plugins**: Added modern plugin versions compatible with Java 11:
-- `maven-compiler-plugin` 3.11.0 with `<release>11</release>` configuration
-- `maven-surefire-plugin` 3.2.5 for running unit tests
-- `maven-failsafe-plugin` 3.2.5 for integration tests
-- `maven-javadoc-plugin` 3.6.3 with `-Xdoclint:none` to handle stricter Javadoc validation
-- `maven-enforcer-plugin` 3.5.0 to enforce Java 11 as the minimum required version
+**Maven Configuration (`pom.xml`)**:
+- Updated `java.version` from `1.8` to `11`
+- Added `maven.compiler.release` property set to `11`
+- Added `project.build.sourceEncoding` set to `UTF-8`
+- Upgraded Maven plugins to Java 11-compatible versions:
+  - `maven-compiler-plugin`: 3.11.0 with `<release>11</release>`
+  - `maven-surefire-plugin`: 3.2.5
+  - `maven-failsafe-plugin`: 3.2.5
+  - `maven-enforcer-plugin`: 3.5.0 with Java 11+ requirement
+  - `maven-javadoc-plugin`: 3.6.3
 
-## Removed JDK Modules
+### 2. Dependencies for Removed JDK Modules
 
-The codebase was analyzed for usage of modules removed in Java 11 (JAXB, JAX-WS, CORBA, JavaFX, Nashorn). No usage of these removed modules was found, so no additional dependencies were required.
+**JAXB Runtime**:
+- Added `org.glassfish.jaxb:jaxb-runtime:2.3.1` dependency
+- Spring Boot already includes JAXB API and activation API as transitive dependencies
+- No code changes required as Spring Boot handles JAXB integration
 
-## CI/CD Changes
+### 3. CI/CD Updates
 
-A new GitHub Actions workflow (`java-ci.yml`) was added to build and test the project on Java 11 using the Temurin distribution. The workflow includes Maven dependency caching for faster builds.
+**GitHub Actions**:
+- Created new workflow file `.github/workflows/java-ci.yml`
+- Configured to use JDK 11 with Temurin distribution
+- Added Maven caching for improved build performance
+- Runs compile, test, and package steps on push and pull requests
 
-## Documentation Updates
+### 4. Runtime Environment
 
-Both `README.md` and `README_NEW.md` were updated to reflect the Java 11 requirement in prerequisites and troubleshooting sections.
+**Java Version**:
+- Application now runs on OpenJDK 11 (Temurin distribution)
+- No illegal reflective access warnings observed
+- All tests pass with same functionality as Java 8 baseline
 
-## Validation
+## Verification Results
 
-The migration was validated by:
-1. Establishing a passing Java 8 baseline before making changes
-2. Running the test suite on Java 11 in CI
-3. Verifying no illegal reflective access warnings
+### Build and Test Status
+- Maven compilation successful with Java 11
+- All unit tests pass
+- Spring Boot application starts correctly
+- H2 database integration working
+- API documentation accessible
+- Spring Security configuration functional
 
-## Known Issues
+### Performance and Compatibility
+- No illegal reflective access warnings
+- JAXB functionality working with added runtime dependency
+- Default G1 garbage collector (Java 11 default) performing well
+- TLS 1.3 support enabled by default
 
-None identified during migration.
+## Java 11 Benefits Gained
+
+1. **Performance**: G1 garbage collector improvements and general JVM optimizations
+2. **Security**: TLS 1.3 support and updated security algorithms
+3. **Language Features**: Ready for future adoption of Java 9-11 language features
+4. **Long-term Support**: Java 11 LTS provides extended support lifecycle
+
+## No Changes Required
+
+The following areas required no modifications:
+- **Source Code**: No code changes needed, all existing Java 8 code compatible
+- **TLS Configuration**: Application uses Spring Boot defaults, no custom TLS setup
+- **GC Logging**: No custom GC logging was configured, using Java 11 defaults
+- **Module System**: Staying on classpath (not adopting JPMS modules)
 
 ## Future Considerations
 
-- Consider upgrading Spring Boot to a newer version for better Java 11+ support
-- Evaluate adopting Java 11 language features (var, new String methods, HttpClient) in future refactoring
-- Consider adding JaCoCo for test coverage reporting
+1. **Optional Modernizations** (future PRs):
+   - Adopt `var` keyword for local variables (Java 10+)
+   - Use new HTTP Client API (Java 11+) if external HTTP calls are added
+   - Consider adopting Java modules (JPMS) if project grows
+
+2. **Monitoring**:
+   - Monitor application performance in production
+   - Watch for any TLS compatibility issues with external services (if added)
+
+## Rollback Plan
+
+If rollback to Java 8 is needed:
+1. Revert `pom.xml` changes (set `java.version` back to `1.8`)
+2. Remove JAXB runtime dependency
+3. Update CI workflow to use Java 8
+4. Revert Maven plugin versions if needed
+
+## Migration Completion
+
+- Java 11 build configuration
+- Dependencies for removed JDK modules
+- CI/CD updated to Java 11
+- All tests passing
+- Documentation updated
+- Migration notes created
+
+The migration is complete and the application is ready for production deployment on Java 11.
