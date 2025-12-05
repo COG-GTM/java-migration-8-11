@@ -37,7 +37,7 @@ for testing, and students studying enterprise Java application architecture.
 
 ### Prerequisites
 
-- Java 8 or higher
+- Java 17 or higher
 - Maven 3.6+ (or use included Maven wrapper)
 - Any modern IDE (Spring Tool Suite, IntelliJ IDEA, Eclipse)
 
@@ -65,14 +65,14 @@ $ open http://localhost:8989/bank-api/h2-console/
 
 ## Configuration
 
-| Configuration Property | Required | Default | Description |
-|----------------------|----------|---------|-------------|
-| server.port | No | 8989 | Application server port |
-| server.servlet.context-path | No | /bank-api | Base path for all endpoints |
-| spring.security.user.name | No | bankapp | Basic auth username |
-| spring.security.user.password | No | changeit | Basic auth password |
-| spring.h2.console.enabled | No | true | Enable H2 database console |
-| spring.datasource.url | No | jdbc:h2:mem:testdb | H2 database connection URL |
+|Configuration Property|Required|Default|Description|
+|----------------------|--------|-------|-----------|
+|server.port|No|8989|Application server port|
+|server.servlet.context-path|No|/bank-api|Base path for all endpoints|
+|spring.security.user.name|No|bankapp|Basic auth username|
+|spring.security.user.password|No|changeit|Basic auth password|
+|spring.h2.console.enabled|No|true|Enable H2 database console|
+|spring.datasource.url|No|jdbc:h2:mem:testdb|H2 database connection URL|
 
 **Configuration Files**:
 
@@ -306,13 +306,13 @@ The application includes Spring Boot integration tests that verify:
 
 ### Common Issues
 
-| Symptom | Cause | Solution |
-|---------|-------|----------|
-| Port 8989 already in use | Another app using the port | Change `server.port` or kill process |
-| 401 Unauthorized | Missing or incorrect credentials | Use `bankapp:changeit` for basic auth |
-| H2 Console not accessible | Security configuration issue | Set `spring.h2.console.enabled=true` |
-| Maven build fails | Missing Java 8 | Install Java 8 and set `JAVA_HOME` |
-| Swagger UI not loading | Context path configuration | Access via `/bank-api/swagger-ui.html` |
+|Symptom|Cause|Solution|
+|-------|-----|--------|
+|Port 8989 already in use|Another app using the port|Change `server.port` or kill process|
+|401 Unauthorized|Missing or incorrect credentials|Use `bankapp:changeit` for basic auth|
+|H2 Console not accessible|Security configuration issue|Set `spring.h2.console.enabled=true`|
+|Maven build fails|Missing Java 17|Install Java 17 and set `JAVA_HOME`|
+|Swagger UI not loading|Context path configuration|Access via `/bank-api/swagger-ui.html`|
 
 ## Deployment
 
