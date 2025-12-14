@@ -95,11 +95,34 @@ The following areas required no or minimal modifications:
 
 ## Rollback Plan
 
-If rollback to Java 8 is needed:
+For detailed rollback procedures, see [ROLLBACK.md](ROLLBACK.md).
+
+Quick rollback summary if reverting to Java 8 is needed:
+
+1. Stop the running application
+2. Deploy the Java 8 version JAR file (from backup or rebuild from master branch)
+3. Configure the environment to use Java 8 runtime
+4. Start the application and verify functionality
+
+For source code rollback:
 1. Revert `pom.xml` changes (set `java.version` back to `1.8`)
 2. Remove JAXB runtime dependency
-3. Update CI workflow to use Java 8
-4. Revert Maven plugin versions if needed
+3. Revert Swagger migration (SpringDoc back to Springfox)
+4. Update CI workflow to use Java 8
+5. Revert Maven plugin versions if needed
+
+## Deployment Guide
+
+For detailed deployment procedures, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+The deployment guide covers:
+- Environment requirements and prerequisites
+- Step-by-step deployment instructions
+- Post-deployment verification procedures
+- Monitoring and health check configuration
+- Troubleshooting common issues
+- Systemd service configuration for production
+- Docker deployment options
 
 ## Migration Completion
 

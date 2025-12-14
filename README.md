@@ -84,9 +84,13 @@ http://localhost:8989/bank-api/h2-console/
 2. Browse to <project-root>/src/test/resources to find sample requests to add customer and accounts.
 
 
-## Migration Notes
+## Documentation
 
-This application has been migrated from Java 8 to Java 11 (LTS). See `MIGRATION_NOTES.md` for detailed information about the migration process and changes made.
+This application has been migrated from Java 8 to Java 11 (LTS). The following documentation is available:
+
+- [MIGRATION_NOTES.md](MIGRATION_NOTES.md) - Detailed information about the Java 8 to 11 migration process and changes made
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Step-by-step deployment guide with environment requirements and verification procedures
+- [ROLLBACK.md](ROLLBACK.md) - Rollback runbook with procedures for reverting to Java 8 if needed
 
 ## Authors
 
