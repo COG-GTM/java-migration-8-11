@@ -62,6 +62,46 @@ This document summarizes the changes made to migrate the BankApp from Java 8 to 
 - API documentation accessible
 - Spring Security configuration functional
 
+### Application Startup Verification (MBA-782)
+
+**Verification Date**: December 14, 2025
+
+**Java Runtime Used**:
+```
+openjdk version "11.0.29" 2025-10-21
+OpenJDK Runtime Environment (build 11.0.29+7-post-Ubuntu-1ubuntu122.04)
+OpenJDK 64-Bit Server VM (build 11.0.29+7-post-Ubuntu-1ubuntu122.04, mixed mode, sharing)
+```
+
+**Startup Command**: `java -jar target/bank-app-1.0.0.jar`
+
+**Startup Results**:
+- Application started successfully in approximately 5.08 seconds
+- Tomcat initialized on port 8989 with context path '/bank-api'
+- Spring Boot version: 2.7.18
+- Hibernate ORM version: 5.6.15.Final
+- H2 database console available at '/h2-console'
+- Spring Security filter chain configured correctly
+- Actuator endpoint exposed at '/actuator'
+
+**Startup Log Analysis**:
+- No ERROR level messages in startup logs
+- One WARN message about `spring.jpa.open-in-view` being enabled by default (expected, non-critical)
+- All Spring Data JPA repositories bootstrapped successfully (4 repositories found)
+- HikariCP connection pool started successfully
+- JPA EntityManagerFactory initialized for persistence unit 'default'
+
+**Service Verification**:
+| Endpoint | Status | Response |
+|----------|--------|----------|
+| `/actuator/health` | 200 OK | `{"status":"UP"}` |
+| `/actuator` | 200 OK | Links to health endpoints |
+| `/customers/all` | 200 OK | Empty array (expected) |
+| `/swagger-ui.html` | 302 Redirect | Redirects to Swagger UI |
+| `/h2-console/` | 200 OK | H2 Console HTML page |
+
+**Conclusion**: The application starts without errors on Java 11 and all services are running correctly.
+
 ### Performance and Compatibility
 - No illegal reflective access warnings
 - JAXB functionality working with added runtime dependency
