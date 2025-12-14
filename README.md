@@ -1,4 +1,4 @@
-# Banking Application using Java8, Spring Boot, Spring Security and H2 DB
+# Banking Application using Java 11, Spring Boot, Spring Security and H2 DB
 
 RESTful API to simulate simple banking operations. 
 
@@ -38,9 +38,24 @@ https://projectlombok.org/setup/eclipse
 
 ### Prerequisites
 
-* Java 8
+* Java 11 (LTS) or higher - [Eclipse Temurin](https://adoptium.net/) recommended
+* JAVA_HOME environment variable pointing to JDK 11 installation
 * Spring Tool Suite 4 or similar IDE
-* [Maven](https://maven.apache.org/) - Dependency Management
+* [Maven](https://maven.apache.org/) 3.6.3+ - Dependency Management
+
+### Environment Setup
+
+Verify your Java installation:
+
+```bash
+java -version
+# Should show Java 11 or higher
+
+echo $JAVA_HOME
+# Should point to JDK 11 installation
+```
+
+For migration details from Java 8, see [MIGRATION_NOTES.md](MIGRATION_NOTES.md).
 
 ### Maven Dependencies
 
