@@ -13,9 +13,9 @@ RESTful API to simulate simple banking operations.
 
 1. Checkout the project from GitHub
 
-```
-git clone https://github.com/sbathina/BankApp
-
+```bash
+git clone https://github.com/COG-GTM/java-migration-8-11.git
+cd java-migration-8-11
 ```
 2. Enable Lombok support on your IDE
 
@@ -84,9 +84,16 @@ http://localhost:8989/bank-api/h2-console/
 2. Browse to <project-root>/src/test/resources to find sample requests to add customer and accounts.
 
 
-## Migration Notes
+## Migration Documentation
 
-This application has been migrated from Java 8 to Java 11 (LTS). See `MIGRATION_NOTES.md` for detailed information about the migration process and changes made.
+This application has been migrated from Java 8 to Java 11 (LTS) as part of the MBA-768 initiative. The following documentation provides comprehensive details about the migration:
+
+- [MIGRATION_NOTES.md](MIGRATION_NOTES.md) - Summary of changes made during the migration
+- [docs/deprecated-api-audit.md](docs/deprecated-api-audit.md) - Detailed audit of deprecated APIs and remediation plan
+- [docs/spring-boot-compatibility.md](docs/spring-boot-compatibility.md) - Spring Boot compatibility analysis and upgrade path
+- [docs/swagger-migration-guide.md](docs/swagger-migration-guide.md) - Guide for Springfox to SpringDoc OpenAPI migration
+
+For a more detailed README with API examples, configuration tables, and troubleshooting guides, see [README_DETAILED.md](README_DETAILED.md).
 
 ## Authors
 
