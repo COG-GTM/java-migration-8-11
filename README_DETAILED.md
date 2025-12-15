@@ -1,9 +1,11 @@
-# BankApp - Spring Boot Banking Application
+# BankApp - Spring Boot Banking Application (Detailed Guide)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> A RESTful banking application built with Spring Boot that simulates fundamental banking
-> operations including customer management, account operations, and financial transactions.
+> This is the extended documentation for BankApp. For a quick overview, see [README.md](README.md).
+
+A RESTful banking application built with Spring Boot that simulates fundamental banking
+operations including customer management, account operations, and financial transactions.
 
 ## Table of Contents
 
@@ -365,11 +367,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and contribution gu
 **Quick Start for Contributors**:
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
+2. Create a branch: `git checkout -b devin/<short-purpose>`
 3. Follow existing code patterns and Spring Boot conventions
 4. Add tests for new functionality
-5. Ensure all tests pass: `mvn test`
-6. Submit a pull request
+5. Format and lint before pushing: `mvn compile`
+6. Ensure all tests pass: `mvn test`
+7. Submit a pull request with small, focused changes
 
 ## License
 
