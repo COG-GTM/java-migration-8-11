@@ -1,8 +1,16 @@
-# Banking Application using Java 11, Spring Boot, Spring Security and H2 DB
+# Banking Application
 
-RESTful API to simulate simple banking operations. 
+[![Java](https://img.shields.io/badge/Java-11%20LTS-orange.svg)](https://openjdk.java.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.x-green.svg)](https://spring.io/projects/spring-boot)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Requirements
+A RESTful API built with Java 11, Spring Boot, Spring Security, and H2 Database to simulate simple banking operations.
+
+## Overview
+
+This application demonstrates a banking system with customer and account management, supporting deposits, withdrawals, and internal transfers. It was migrated from Java 8 to Java 11 (LTS) and serves as a reference for Java version migration best practices.
+
+## Features
 
 *	CRUD operations for customers and accounts.
 *	Support deposits and withdrawals on accounts.
