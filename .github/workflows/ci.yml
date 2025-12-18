@@ -1,0 +1,65 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ develop, master, main ]
+  pull_request:
+    branches: [ develop, master, main ]
+
+env:
+  # Java 17 module system compatibility flags for older Maven plugins and Lombok
+  # Both --add-opens (for reflection) and --add-exports (for direct access) are needed
+  MAVEN_OPTS: >-
+    --add-opens jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+    --add-opens jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+    --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn -B compile --file pom.xml
+
+    - name: Run tests
+      run: mvn -B test --file pom.xml
+
+    - name: Package application
+      run: mvn -B package -DskipTests --file pom.xml
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bank-app-jar
+        path: target/*.jar
+        retention-days: 7

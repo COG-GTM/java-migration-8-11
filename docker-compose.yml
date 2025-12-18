@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  bank-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bank-app
+    ports:
+      - "8989:8989"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/bank-api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
