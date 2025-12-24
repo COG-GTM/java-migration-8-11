@@ -26,6 +26,7 @@ import com.coding.exercise.bankapp.repository.CustomerAccountXRefRepository;
 import com.coding.exercise.bankapp.repository.CustomerRepository;
 import com.coding.exercise.bankapp.repository.TransactionRepository;
 import com.coding.exercise.bankapp.service.helper.BankingServiceHelper;
+import com.coding.exercise.bankapp.service.validation.AccountValidationService;
 
 @Service
 @Transactional
@@ -41,6 +42,8 @@ public class BankingServiceImpl implements BankingService {
     private CustomerAccountXRefRepository custAccXRefRepository;
     @Autowired
     private BankingServiceHelper bankingServiceHelper;
+    @Autowired
+    private AccountValidationService accountValidationService;
 
     public BankingServiceImpl(CustomerRepository repository) {
         this.customerRepository=repository;
@@ -228,33 +231,23 @@ public class BankingServiceImpl implements BankingService {
 		// If customer is present
 		if(customerEntityOpt.isPresent()) {
 			
-			// get FROM ACCOUNT info
+			ResponseEntity<Object> validationResult = accountValidationService.validateTransferAccounts(
+				transferDetails.getFromAccountNumber(), 
+				transferDetails.getToAccountNumber(), 
+				transferDetails.getTransferAmount()
+			);
+			
+			if (validationResult.getStatusCode() != HttpStatus.OK) {
+				return validationResult;
+			}
+			
 			Optional<Account> fromAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getFromAccountNumber());
-			if(fromAccountEntityOpt.isPresent()) {
-				fromAccountEntity = fromAccountEntityOpt.get();
-			}
-			else {
-			// if from request does not exist, 404 Bad Request
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("From Account Number " + transferDetails.getFromAccountNumber() + " not found.");
-			}
-			
-			
-			// get TO ACCOUNT info
 			Optional<Account> toAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getToAccountNumber());
-			if(toAccountEntityOpt.isPresent()) {
-				toAccountEntity = toAccountEntityOpt.get();
-			}
-			else {
-			// if from request does not exist, 404 Bad Request
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("To Account Number " + transferDetails.getToAccountNumber() + " not found.");
-			}
-
 			
-			// if not sufficient funds, return 400 Bad Request
-			if(fromAccountEntity.getAccountBalance() < transferDetails.getTransferAmount()) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient Funds.");
-			}
-			else {
+			fromAccountEntity = fromAccountEntityOpt.get();
+			toAccountEntity = toAccountEntityOpt.get();
+			
+			{
 				synchronized (this) {
 					// update FROM ACCOUNT 
 					fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
