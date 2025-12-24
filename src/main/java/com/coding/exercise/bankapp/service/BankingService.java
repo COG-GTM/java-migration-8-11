@@ -29,4 +29,10 @@ public interface BankingService {
     
     public List<TransactionDetails> findTransactionsByAccountNumber(Long accountNumber);
     
+    public ResponseEntity<Object> suspendAccount(String accountNumber);
+    
+    public ResponseEntity<Object> reactivateAccount(String accountNumber);
+    
+    public ResponseEntity<Object> closeAccount(String accountNumber);
+    
 }
