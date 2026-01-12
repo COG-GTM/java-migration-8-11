@@ -1,16 +1,18 @@
 package com.coding.exercise.bankapp;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+/**
+ * Phase 4: Migrated from JUnit 4 to JUnit 5
+ * - Removed @RunWith(SpringRunner.class) (not needed with JUnit 5)
+ * - Changed org.junit.Test to org.junit.jupiter.api.Test
+ */
 @SpringBootTest
-public class BankingApplicationTests {
+class BankingApplicationTests {
 
 	@Test
-	public void contextLoads() {
+	void contextLoads() {
 	}
 
 }
