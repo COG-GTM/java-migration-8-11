@@ -1,11 +1,31 @@
-server.port: 8989
-server.servlet.context-path: /bank-api
+server:
+  port: 8989
+  servlet:
+    context-path: /bank-api
 
-spring.security.user.name: bankapp
-spring.security.user.password: changeit
-
-# Enabling H2 Console
 spring:
+  security:
+    user:
+      name: bankapp
+      password: changeit
+  # Enabling H2 Console
   h2:
     console:
       enabled: true
+  # Phase 2: H2 2.x compatibility - use legacy mode for compatibility
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=LEGACY
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+  # Phase 2: Allow circular references (required for some Spring Boot 2.6+ apps)
+  main:
+    allow-circular-references: true
+  # Phase 2: Path matching strategy for Spring Boot 2.6+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
