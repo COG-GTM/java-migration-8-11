@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * This configuration will resolve 403 forbidden error when accessing h2-console.
  * 
  * Phase 2: Updated to use SecurityFilterChain (WebSecurityConfigurerAdapter deprecated in Spring Boot 2.7)
+ * Phase 3: Added SpringDoc OpenAPI paths for Swagger UI access
  * 
  * @author sbathina
  *
@@ -27,6 +28,9 @@ public class SecurityConfig {
                 .antMatchers("/").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
             .and()
             .httpBasic()
