@@ -15,8 +15,42 @@
 	<description>Bank App Spring Boot Project</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
+		<maven.compiler.release>11</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Phase 1: Critical Dependency Updates -->
+		<logback.version>1.2.12</logback.version>
+		<lombok.version>1.18.30</lombok.version>
+		<guava.version>32.1.3-jre</guava.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Phase 1: Logback upgrade to fix sun.reflect.Reflection API issue -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			<!-- Phase 1: Guava upgrade to reduce illegal reflective access warnings -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			<!-- Phase 1: Lombok upgrade for better Java 11 compiler support -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
