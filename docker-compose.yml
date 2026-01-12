@@ -1,0 +1,38 @@
+# Phase 5: Docker Compose configuration for BankApp
+# Includes application and H2 database service configuration
+
+version: '3.8'
+
+services:
+  bankapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bankapp
+    ports:
+      - "8989:8989"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=LEGACY
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS=true
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+      - SPRING_SECURITY_USER_NAME=bankapp
+      - SPRING_SECURITY_USER_PASSWORD=changeit
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/bank-api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - bankapp-network
+
+networks:
+  bankapp-network:
+    driver: bridge
