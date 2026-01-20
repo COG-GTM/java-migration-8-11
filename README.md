@@ -1,6 +1,31 @@
 # Banking Application using Java 17, Spring Boot 3.x, Spring Security and H2 DB
 
-RESTful API to simulate simple banking operations. 
+RESTful API to simulate simple banking operations.
+
+## Migration to Java 17 and Spring Boot 3.x
+
+This application has been migrated from Java 8/11 to Java 17 with Spring Boot 3.x. Key changes include:
+
+### Java 17 Requirements
+- **Minimum Java Version**: Java 17 or higher is required
+- **JAVA_HOME**: Must point to JDK 17 installation
+- No special JVM flags are required for production deployment
+
+### Spring Boot 3.x Changes
+- **Spring Boot Version**: Upgraded to 3.2.0
+- **Spring Security 6.x**: Uses new `SecurityFilterChain` configuration (replaces deprecated `WebSecurityConfigurerAdapter`)
+- **Jakarta EE 10**: All `javax.*` packages migrated to `jakarta.*` namespace
+
+### API Documentation Migration
+- **Springfox Swagger** replaced with **SpringDoc OpenAPI**
+- Swagger UI available at: `/bank-api/swagger-ui/index.html`
+- OpenAPI spec available at: `/bank-api/v3/api-docs`
+
+### Dependencies Updated
+- `jakarta.persistence-api` (replaces `javax.persistence`)
+- `jakarta.validation-api` (replaces `javax.validation`)
+- `jakarta.xml.bind-api` (replaces `javax.xml.bind`)
+- `springdoc-openapi-starter-webmvc-ui` (replaces `springfox-swagger2`)
 
 ## Requirements
 
