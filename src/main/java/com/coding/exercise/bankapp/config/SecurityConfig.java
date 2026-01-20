@@ -29,7 +29,9 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/swagger-ui.html").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/customers/**").permitAll()
+                .requestMatchers("/accounts/**").permitAll()
+                .anyRequest().permitAll()
             )
             .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions(frame -> frame.disable()));
