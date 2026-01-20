@@ -48,10 +48,8 @@ public class BankingServiceImpl implements BankingService {
     
    
     public List<CustomerDetails> findAll() {
-    	
-    	List<CustomerDetails> allCustomerDetails = new ArrayList<>();
-
-        Iterable<Customer> customerList = customerRepository.findAll();
+    	var allCustomerDetails = new ArrayList<CustomerDetails>();
+        var customerList = customerRepository.findAll();
 
         customerList.forEach(customer -> {
         	allCustomerDetails.add(bankingServiceHelper.convertToCustomerDomain(customer));
@@ -67,8 +65,7 @@ public class BankingServiceImpl implements BankingService {
      * @return
      */
 	public ResponseEntity<Object> addCustomer(CustomerDetails customerDetails) {
-		
-		Customer customer = bankingServiceHelper.convertToCustomerEntity(customerDetails);
+		var customer = bankingServiceHelper.convertToCustomerEntity(customerDetails);
 		customer.setCreateDateTime(new Date());
 		customerRepository.save(customer);
 		
@@ -83,8 +80,7 @@ public class BankingServiceImpl implements BankingService {
 	 */
     
 	public CustomerDetails findByCustomerNumber(Long customerNumber) {
-		
-		Optional<Customer> customerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
+		var customerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
 
 		if(customerEntityOpt.isPresent())
 			return bankingServiceHelper.convertToCustomerDomain(customerEntityOpt.get());

@@ -1,0 +1,53 @@
+# Docker profile configuration for PostgreSQL database
+# This profile is activated when running in Docker with SPRING_PROFILES_ACTIVE=docker
+#
+# Required environment variables:
+#   SPRING_DATASOURCE_PASSWORD - Database password (required)
+#   SPRING_SECURITY_USER_PASSWORD - Application basic auth password (required)
+#
+# Optional environment variables (with defaults):
+#   SPRING_DATASOURCE_URL - Database URL (default: jdbc:postgresql://localhost:5432/bankdb)
+#   SPRING_DATASOURCE_USERNAME - Database username (default: bankapp)
+#   SPRING_JPA_HIBERNATE_DDL_AUTO - Hibernate DDL mode (default: update)
+
+server:
+  port: 8989
+  servlet:
+    context-path: /bank-api
+
+spring:
+  security:
+    user:
+      name: ${SPRING_SECURITY_USER_NAME:bankapp}
+      password: ${SPRING_SECURITY_USER_PASSWORD}
+
+  # PostgreSQL configuration (values must be provided via environment variables)
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bankdb}
+    username: ${SPRING_DATASOURCE_USERNAME:bankapp}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Disable H2 console in production
+  h2:
+    console:
+      enabled: false
+
+# Actuator configuration for health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
