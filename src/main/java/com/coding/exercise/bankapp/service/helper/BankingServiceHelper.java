@@ -82,7 +82,9 @@ public class BankingServiceHelper {
 	}
 	
 	public Address convertToAddressEntity(AddressDetails addressDetails) {
-		
+		if (addressDetails == null) {
+			return null;
+		}
 		return Address.builder().address1(addressDetails.getAddress1())
 				.address2(addressDetails.getAddress2())
 				.city(addressDetails.getCity())
@@ -102,7 +104,9 @@ public class BankingServiceHelper {
 	}
 	
 	public Contact convertToContactEntity(ContactDetails contactDetails) {
-		
+		if (contactDetails == null) {
+			return null;
+		}
 		return Contact.builder()
 				.emailId(contactDetails.getEmailId())
 				.homePhone(contactDetails.getHomePhone())
@@ -121,7 +125,9 @@ public class BankingServiceHelper {
 	}
 	
 	public BankInfo convertToBankInfoEntity(BankInformation bankInformation) {
-		
+		if (bankInformation == null) {
+			return null;
+		}
 		return BankInfo.builder()
 				.branchCode(bankInformation.getBranchCode())
 				.branchName(bankInformation.getBranchName())
