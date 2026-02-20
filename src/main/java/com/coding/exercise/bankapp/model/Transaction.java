@@ -30,7 +30,7 @@ public class Transaction {
 	
 	private Long accountNumber;
 	
-	@Temporal(TemporalType.TIME)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date txDateTime;
 	
 	private String txType;
