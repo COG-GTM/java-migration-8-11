@@ -1,6 +1,6 @@
 package com.coding.exercise.bankapp.service;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ import com.coding.exercise.bankapp.repository.CustomerRepository;
 import com.coding.exercise.bankapp.repository.TransactionRepository;
 import com.coding.exercise.bankapp.service.helper.BankingServiceHelper;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BankingServiceImplTest {
 
 	@Mock
@@ -46,7 +46,7 @@ public class BankingServiceImplTest {
 
 	private BankingServiceImpl bankingService;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		bankingService = new BankingServiceImpl(customerRepository);
 		ReflectionTestUtils.setField(bankingService, "accountRepository", accountRepository);
@@ -106,7 +106,7 @@ public class BankingServiceImplTest {
 		assertEquals("Mid", saved.getMiddleName());
 		assertEquals("ACTIVE", saved.getStatus());
 		assertNotNull(saved.getUpdateDateTime());
-		assertTrue(!saved.getUpdateDateTime().isAfter(LocalDateTime.now()));
+		assertFalse(saved.getUpdateDateTime().isAfter(LocalDateTime.now()));
 	}
 
 	@Test
