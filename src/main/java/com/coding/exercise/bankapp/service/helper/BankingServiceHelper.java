@@ -1,6 +1,6 @@
 package com.coding.exercise.bankapp.service.helper;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 
@@ -150,13 +150,21 @@ public class BankingServiceHelper {
 							.build();
 	}
 	
+	/**
+	 * Create a new transaction record using Java 8 java.time API.
+	 *
+	 * @param transferDetails the transfer details
+	 * @param accountNumber the account number
+	 * @param txType the transaction type (DEBIT or CREDIT)
+	 * @return the transaction entity
+	 */
 	public Transaction createTransaction(TransferDetails transferDetails, Long accountNumber, String txType) {
 		
 		return Transaction.builder()
-							.accountNumber(accountNumber)
-							.txAmount(transferDetails.getTransferAmount())
-							.txType(txType)
-							.txDateTime(new Date())
-							.build();
+								.accountNumber(accountNumber)
+								.txAmount(transferDetails.getTransferAmount())
+								.txType(txType)
+								.txDateTime(LocalDateTime.now())
+								.build();
 	}
 }

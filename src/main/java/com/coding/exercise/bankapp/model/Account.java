@@ -1,6 +1,6 @@
 package com.coding.exercise.bankapp.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,9 +39,7 @@ public class Account {
 	
 	private Double accountBalance;
     
-    @Temporal(TemporalType.TIME)
-	private Date createDateTime;
+    private LocalDateTime createDateTime;
 	
-    @Temporal(TemporalType.TIME)
-	private Date updateDateTime;
+    private LocalDateTime updateDateTime;
 }
