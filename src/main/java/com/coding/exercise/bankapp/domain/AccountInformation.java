@@ -1,6 +1,6 @@
 package com.coding.exercise.bankapp.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,5 +25,5 @@ public class AccountInformation {
 	
 	private Double accountBalance;
 	
-	private Date accountCreated;
+	private LocalDateTime accountCreated;
 }

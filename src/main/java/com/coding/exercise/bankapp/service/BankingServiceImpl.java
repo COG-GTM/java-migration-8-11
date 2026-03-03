@@ -1,9 +1,11 @@
 package com.coding.exercise.bankapp.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,16 +50,9 @@ public class BankingServiceImpl implements BankingService {
     
    
     public List<CustomerDetails> findAll() {
-    	
-    	List<CustomerDetails> allCustomerDetails = new ArrayList<>();
-
-        Iterable<Customer> customerList = customerRepository.findAll();
-
-        customerList.forEach(customer -> {
-        	allCustomerDetails.add(bankingServiceHelper.convertToCustomerDomain(customer));
-        });
-        
-        return allCustomerDetails;
+		return StreamSupport.stream(customerRepository.findAll().spliterator(), false)
+				.map(bankingServiceHelper::convertToCustomerDomain)
+				.collect(Collectors.toList());
     }
 
     /**
@@ -69,7 +64,7 @@ public class BankingServiceImpl implements BankingService {
 	public ResponseEntity<Object> addCustomer(CustomerDetails customerDetails) {
 		
 		Customer customer = bankingServiceHelper.convertToCustomerEntity(customerDetails);
-		customer.setCreateDateTime(new Date());
+		customer.setCreateDateTime(LocalDateTime.now());
 		customerRepository.save(customer);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body("New Customer created successfully.");
@@ -83,13 +78,9 @@ public class BankingServiceImpl implements BankingService {
 	 */
     
 	public CustomerDetails findByCustomerNumber(Long customerNumber) {
-		
-		Optional<Customer> customerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
-
-		if(customerEntityOpt.isPresent())
-			return bankingServiceHelper.convertToCustomerDomain(customerEntityOpt.get());
-		
-		return null;
+		return customerRepository.findByCustomerNumber(customerNumber)
+				.map(bankingServiceHelper::convertToCustomerDomain)
+				.orElse(null);
 	}
 
 	/**
@@ -100,49 +91,45 @@ public class BankingServiceImpl implements BankingService {
 	 * @return
 	 */
 	public ResponseEntity<Object> updateCustomer(CustomerDetails customerDetails, Long customerNumber) {
-		Optional<Customer> managedCustomerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
-		Customer unmanagedCustomerEntity = bankingServiceHelper.convertToCustomerEntity(customerDetails);
-		if(managedCustomerEntityOpt.isPresent()) {
-			Customer managedCustomerEntity = managedCustomerEntityOpt.get();
-			
-			if(Optional.ofNullable(unmanagedCustomerEntity.getContactDetails()).isPresent()) {
-				
-				Contact managedContact = managedCustomerEntity.getContactDetails();
-				if(managedContact != null) {
-					managedContact.setEmailId(unmanagedCustomerEntity.getContactDetails().getEmailId());
-					managedContact.setHomePhone(unmanagedCustomerEntity.getContactDetails().getHomePhone());
-					managedContact.setWorkPhone(unmanagedCustomerEntity.getContactDetails().getWorkPhone());
-				} else
-					managedCustomerEntity.setContactDetails(unmanagedCustomerEntity.getContactDetails());
-			}
-			
-			if(Optional.ofNullable(unmanagedCustomerEntity.getCustomerAddress()).isPresent()) {
-				
-				Address managedAddress = managedCustomerEntity.getCustomerAddress();
-				if(managedAddress != null) {
-					managedAddress.setAddress1(unmanagedCustomerEntity.getCustomerAddress().getAddress1());
-					managedAddress.setAddress2(unmanagedCustomerEntity.getCustomerAddress().getAddress2());
-					managedAddress.setCity(unmanagedCustomerEntity.getCustomerAddress().getCity());
-					managedAddress.setState(unmanagedCustomerEntity.getCustomerAddress().getState());
-					managedAddress.setZip(unmanagedCustomerEntity.getCustomerAddress().getZip());
-					managedAddress.setCountry(unmanagedCustomerEntity.getCustomerAddress().getCountry());
-				} else
-					managedCustomerEntity.setCustomerAddress(unmanagedCustomerEntity.getCustomerAddress());
-			}
-			
-			managedCustomerEntity.setUpdateDateTime(new Date());
-			managedCustomerEntity.setStatus(unmanagedCustomerEntity.getStatus());
-			managedCustomerEntity.setFirstName(unmanagedCustomerEntity.getFirstName());
-			managedCustomerEntity.setMiddleName(unmanagedCustomerEntity.getMiddleName());
-			managedCustomerEntity.setLastName(unmanagedCustomerEntity.getLastName());
-			managedCustomerEntity.setUpdateDateTime(new Date());
-			
-			customerRepository.save(managedCustomerEntity);
-			
-			return ResponseEntity.status(HttpStatus.OK).body("Success: Customer updated.");
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer Number " + customerNumber + " not found.");
-		}
+		return customerRepository.findByCustomerNumber(customerNumber)
+				.map(managedCustomerEntity -> {
+					Customer unmanagedCustomerEntity = bankingServiceHelper.convertToCustomerEntity(customerDetails);
+
+					Optional.ofNullable(unmanagedCustomerEntity.getContactDetails()).ifPresent(unmanagedContact -> {
+						Contact managedContact = managedCustomerEntity.getContactDetails();
+						if (managedContact != null) {
+							managedContact.setEmailId(unmanagedContact.getEmailId());
+							managedContact.setHomePhone(unmanagedContact.getHomePhone());
+							managedContact.setWorkPhone(unmanagedContact.getWorkPhone());
+						} else {
+							managedCustomerEntity.setContactDetails(unmanagedContact);
+						}
+					});
+
+					Optional.ofNullable(unmanagedCustomerEntity.getCustomerAddress()).ifPresent(unmanagedAddress -> {
+						Address managedAddress = managedCustomerEntity.getCustomerAddress();
+						if (managedAddress != null) {
+							managedAddress.setAddress1(unmanagedAddress.getAddress1());
+							managedAddress.setAddress2(unmanagedAddress.getAddress2());
+							managedAddress.setCity(unmanagedAddress.getCity());
+							managedAddress.setState(unmanagedAddress.getState());
+							managedAddress.setZip(unmanagedAddress.getZip());
+							managedAddress.setCountry(unmanagedAddress.getCountry());
+						} else {
+							managedCustomerEntity.setCustomerAddress(unmanagedAddress);
+						}
+					});
+
+					managedCustomerEntity.setStatus(unmanagedCustomerEntity.getStatus());
+					managedCustomerEntity.setFirstName(unmanagedCustomerEntity.getFirstName());
+					managedCustomerEntity.setMiddleName(unmanagedCustomerEntity.getMiddleName());
+					managedCustomerEntity.setLastName(unmanagedCustomerEntity.getLastName());
+					managedCustomerEntity.setUpdateDateTime(LocalDateTime.now());
+
+					customerRepository.save(managedCustomerEntity);
+					return ResponseEntity.status(HttpStatus.OK).<Object>body("Success: Customer updated.");
+				})
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).<Object>body("Customer Number " + customerNumber + " not found."));
 	}
 
 	/**
@@ -152,17 +139,13 @@ public class BankingServiceImpl implements BankingService {
 	 * @return
 	 */
 	public ResponseEntity<Object> deleteCustomer(Long customerNumber) {
-		
-		Optional<Customer> managedCustomerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
+		return customerRepository.findByCustomerNumber(customerNumber)
+				.map(managedCustomerEntity -> {
+					customerRepository.delete(managedCustomerEntity);
+					return ResponseEntity.status(HttpStatus.OK).<Object>body("Success: Customer deleted.");
+				})
+				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).<Object>body("Customer does not exist."));
 
-		if(managedCustomerEntityOpt.isPresent()) {
-			Customer managedCustomerEntity = managedCustomerEntityOpt.get();
-			customerRepository.delete(managedCustomerEntity);
-			return ResponseEntity.status(HttpStatus.OK).body("Success: Customer deleted.");
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer does not exist.");
-		}
-		
 		//TODO: Delete all customer entries from CustomerAccountXRef
 	}
 
@@ -173,15 +156,10 @@ public class BankingServiceImpl implements BankingService {
 	 * @return
 	 */
 	public ResponseEntity<Object> findByAccountNumber(Long accountNumber) {
-		
-		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(accountNumber);
-
-		if(accountEntityOpt.isPresent()) {
-			return ResponseEntity.status(HttpStatus.FOUND).body(bankingServiceHelper.convertToAccountDomain(accountEntityOpt.get()));
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account Number " + accountNumber + " not found.");
-		}
-		
+		return accountRepository.findByAccountNumber(accountNumber)
+				.<ResponseEntity<Object>>map(accountEntity -> ResponseEntity.status(HttpStatus.FOUND)
+						.<Object>body(bankingServiceHelper.convertToAccountDomain(accountEntity)))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).<Object>body("Account Number " + accountNumber + " not found."));
 	}
 
 	/**
@@ -258,12 +236,12 @@ public class BankingServiceImpl implements BankingService {
 				synchronized (this) {
 					// update FROM ACCOUNT 
 					fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
-					fromAccountEntity.setUpdateDateTime(new Date());
+					fromAccountEntity.setUpdateDateTime(LocalDateTime.now());
 					accountEntities.add(fromAccountEntity);
 					
 					// update TO ACCOUNT
 					toAccountEntity.setAccountBalance(toAccountEntity.getAccountBalance() + transferDetails.getTransferAmount());
-					toAccountEntity.setUpdateDateTime(new Date());
+					toAccountEntity.setUpdateDateTime(LocalDateTime.now());
 					accountEntities.add(toAccountEntity);
 					
 					accountRepository.saveAll(accountEntities);
@@ -293,18 +271,12 @@ public class BankingServiceImpl implements BankingService {
 	 * @return
 	 */
 	public List<TransactionDetails> findTransactionsByAccountNumber(Long accountNumber) {
-		List<TransactionDetails> transactionDetails = new ArrayList<>();
-		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(accountNumber);
-		if(accountEntityOpt.isPresent()) {
-			Optional<List<Transaction>> transactionEntitiesOpt = transactionRepository.findByAccountNumber(accountNumber);
-			if(transactionEntitiesOpt.isPresent()) {
-				transactionEntitiesOpt.get().forEach(transaction -> {
-					transactionDetails.add(bankingServiceHelper.convertToTransactionDomain(transaction));
-				});
-			}
-		}
-		
-		return transactionDetails;
+		return accountRepository.findByAccountNumber(accountNumber)
+				.flatMap(accountEntity -> transactionRepository.findByAccountNumber(accountNumber))
+				.map(transactionEntities -> transactionEntities.stream()
+						.map(bankingServiceHelper::convertToTransactionDomain)
+						.collect(Collectors.toList()))
+				.orElseGet(ArrayList::new);
 	}
 
 
