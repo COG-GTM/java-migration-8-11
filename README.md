@@ -14,7 +14,8 @@ RESTful API to simulate simple banking operations.
 1. Checkout the project from GitHub
 
 ```
-git clone https://github.com/sbathina/BankApp
+git clone https://github.com/COG-GTM/Aplicacion-de-Banca-Spring-Boot.git
+cd Aplicacion-de-Banca-Spring-Boot
 
 ```
 2. Enable Lombok support on your IDE
@@ -25,15 +26,19 @@ Refer to the following link for instructions:
 https://projectlombok.org/setup/eclipse
 
 ```
-3. Open IDE of your choice and Import as existing maven project in your workspace
+3. Open IDE of your choice and import as an existing Maven project in your workspace.
 
 ```
-- Import existing maven project
-- Run mvn clean install
-- If using STS, Run As Spring Boot App
+- Import existing Maven project
+- Run: mvn clean test
+- Run locally: mvn spring-boot:run
 
 ```
-4. Default port for the api is 8989
+4. Default port for the API is 8989 (configurable in `src/main/resources/application.yml`).
+
+### Java 8 notes
+
+This project uses Java 8 language features (streams, method references) and the Java 8 Date/Time API (`java.time.LocalDateTime`) instead of the legacy `java.util.Date`.
 
 
 ### Prerequisites

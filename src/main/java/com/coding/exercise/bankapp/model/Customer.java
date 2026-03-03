@@ -1,6 +1,6 @@
 package com.coding.exercise.bankapp.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,10 +44,8 @@ public class Customer {
     @OneToOne(cascade=CascadeType.ALL)
     private Contact contactDetails;
     
-    @Temporal(TemporalType.TIME)
-	private Date createDateTime;
+	private LocalDateTime createDateTime;
 	
-    @Temporal(TemporalType.TIME)
-	private Date updateDateTime;
+	private LocalDateTime updateDateTime;
 	
 }

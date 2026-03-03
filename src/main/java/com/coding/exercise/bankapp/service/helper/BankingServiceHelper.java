@@ -1,6 +1,6 @@
 package com.coding.exercise.bankapp.service.helper;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 
@@ -156,7 +156,7 @@ public class BankingServiceHelper {
 							.accountNumber(accountNumber)
 							.txAmount(transferDetails.getTransferAmount())
 							.txType(txType)
-							.txDateTime(new Date())
+							.txDateTime(LocalDateTime.now())
 							.build();
 	}
 }
