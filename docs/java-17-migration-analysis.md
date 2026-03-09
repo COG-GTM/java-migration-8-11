@@ -324,10 +324,13 @@ Spring Security 6.x removes
 
 Spring Boot 3.2.x manages JUnit 5.10.x. The project
 currently uses `spring-boot-starter-test` and
-`spring-security-test`. No test source files were found
-in the repository, so test migration is not a concern.
+`spring-security-test`. One test file exists
+(`BankingApplicationTests.java` with a `@SpringBootTest`
+context load test). It uses JUnit 5 and requires no
+code changes, but must be run to verify the migrated
+application context loads correctly.
 
-**Risk: NONE**
+**Risk: LOW**
 
 ### 4.7 Dependency Compatibility Summary
 
