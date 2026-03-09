@@ -188,7 +188,7 @@ find src/main/java -name "*.java" \
 
 | Change | Impact |
 |--------|--------|
-| `GenerationType.AUTO` defaults to `SEQUENCE` instead of `IDENTITY`/`TABLE` | HIGH -- all 7 entities use `GenerationType.AUTO` with UUID primary keys |
+| `GenerationType.AUTO` defaults to `SEQUENCE` instead of `IDENTITY`/`TABLE` | HIGH -- 6 of 7 entities use explicit `GenerationType.AUTO` with UUID primary keys; `Customer.java` uses bare `@GeneratedValue` (implicit AUTO) |
 | UUID handling improvements | MEDIUM -- verify H2 UUID column type |
 | Query behavior changes | LOW -- project uses Spring Data derived queries |
 
