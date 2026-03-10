@@ -1,4 +1,4 @@
-# Banking Application using Java 11, Spring Boot, Spring Security and H2 DB
+# Banking Application using Java 21, Spring Boot 3, Spring Security and H2 DB
 
 RESTful API to simulate simple banking operations. 
 
@@ -38,7 +38,7 @@ https://projectlombok.org/setup/eclipse
 
 ### Prerequisites
 
-* Java 11 (LTS) - OpenJDK 11 or later
+* Java 21 (LTS) - Eclipse Temurin 21 or later
 * Spring Tool Suite 4 or similar IDE
 * [Maven](https://maven.apache.org/) - Dependency Management
 
@@ -52,7 +52,7 @@ spring-boot-starter-web
 spring-boot-devtools
 h2 - Inmemory database
 lombok - to reduce boilerplate code
-springdoc-openapi-ui - API documentation (OpenAPI 3.0)
+springdoc-openapi-starter-webmvc-ui - API documentation (OpenAPI 3.0)
 spring-boot-starter-test
 spring-security-test
 
@@ -86,7 +86,14 @@ http://localhost:8989/bank-api/h2-console/
 
 ## Migration Notes
 
-This application has been migrated from Java 8 to Java 11 (LTS). See `MIGRATION_NOTES.md` for detailed information about the migration process and changes made.
+This application has been migrated from Java 8 to Java 21 (LTS). Key changes include:
+
+- Spring Boot upgraded from 2.1.4 to 3.2.5
+- Migrated from javax.persistence to jakarta.persistence (Jakarta EE 10)
+- Replaced Springfox Swagger with springdoc-openapi (OpenAPI 3.0)
+- Updated Spring Security configuration to use SecurityFilterChain (WebSecurityConfigurerAdapter removed)
+- Updated test framework from JUnit 4 to JUnit 5
+- Added GitHub Actions CI pipeline with JDK 21
 
 ## Authors
 
