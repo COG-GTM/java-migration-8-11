@@ -1,9 +1,9 @@
 package com.coding.exercise.bankapp.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -47,7 +47,7 @@ import com.coding.exercise.bankapp.repository.CustomerRepository;
 import com.coding.exercise.bankapp.repository.TransactionRepository;
 import com.coding.exercise.bankapp.service.helper.BankingServiceHelper;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BankingServiceImplTest {
 
     @Mock
@@ -70,7 +70,7 @@ public class BankingServiceImplTest {
     private Customer sampleCustomer;
     private CustomerDetails sampleCustomerDetails;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         bankingService = new BankingServiceImpl(customerRepository);
         // Inject remaining @Autowired fields via reflection

@@ -1,12 +1,12 @@
 package com.coding.exercise.bankapp.service.helper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.coding.exercise.bankapp.domain.AccountInformation;
 import com.coding.exercise.bankapp.domain.AddressDetails;
@@ -34,7 +34,7 @@ public class BankingServiceHelperTest {
 
     private BankingServiceHelper helper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         helper = new BankingServiceHelper();
     }
