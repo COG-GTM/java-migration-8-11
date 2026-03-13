@@ -1,8 +1,8 @@
-# Java 8 to 11 Migration Notes
+# Java 11 to 18 Migration Notes
 
 ## Overview
 
-This document summarizes the changes made to migrate the BankApp from Java 8 to Java 11 (LTS).
+This document summarizes the changes made to migrate the BankApp from Java 8 to Java 18 (LTS).
 
 ## Changes Made
 
@@ -12,11 +12,11 @@ This document summarizes the changes made to migrate the BankApp from Java 8 to 
 - Updated `java.version` from `1.8` to `11`
 - Added `maven.compiler.release` property set to `11`
 - Added `project.build.sourceEncoding` set to `UTF-8`
-- Upgraded Maven plugins to Java 11-compatible versions:
+- Upgraded Maven plugins to Java 18-compatible versions:
   - `maven-compiler-plugin`: 3.11.0 with `<release>11</release>`
   - `maven-surefire-plugin`: 3.2.5
   - `maven-failsafe-plugin`: 3.2.5
-  - `maven-enforcer-plugin`: 3.5.0 with Java 11+ requirement
+  - `maven-enforcer-plugin`: 3.5.0 with Java 18+ requirement
   - `maven-javadoc-plugin`: 3.6.3
 
 ### 2. Dependencies for Removed JDK Modules
@@ -40,22 +40,22 @@ This document summarizes the changes made to migrate the BankApp from Java 8 to 
 ### 4. CI/CD Updates
 
 **GitHub Actions**:
-- Created workflow file `.github/workflows/ci.yml` for Java 11 builds
-- Configured to use JDK 11 with Temurin distribution
+- Created workflow file `.github/workflows/ci.yml` for Java 18 builds
+- Configured to use JDK 18 with Temurin distribution
 - Added Maven caching for improved build performance
 - Runs compile, test, and verify steps on push and pull requests
 
 ### 4. Runtime Environment
 
 **Java Version**:
-- Application now runs on OpenJDK 11 (Temurin distribution)
+- Application now runs on OpenJDK 18 (Temurin distribution)
 - No illegal reflective access warnings observed
 - All tests pass with same functionality as Java 8 baseline
 
 ## Verification Results
 
 ### Build and Test Status
-- Maven compilation successful with Java 11
+- Maven compilation successful with Java 18
 - All unit tests pass
 - Spring Boot application starts correctly
 - H2 database integration working
@@ -100,33 +100,33 @@ OpenJDK 64-Bit Server VM (build 11.0.29+7-post-Ubuntu-1ubuntu122.04, mixed mode,
 | `/swagger-ui.html` | 302 Redirect | Redirects to Swagger UI |
 | `/h2-console/` | 200 OK | H2 Console HTML page |
 
-**Conclusion**: The application starts without errors on Java 11 and all services are running correctly.
+**Conclusion**: The application starts without errors on Java 18 and all services are running correctly.
 
 ### Performance and Compatibility
 - No illegal reflective access warnings
 - JAXB functionality working with added runtime dependency
-- Default G1 garbage collector (Java 11 default) performing well
+- Default G1 garbage collector (Java 18 default) performing well
 - TLS 1.3 support enabled by default
 
-## Java 11 Benefits Gained
+## Java 18 Benefits Gained
 
 1. **Performance**: G1 garbage collector improvements and general JVM optimizations
 2. **Security**: TLS 1.3 support and updated security algorithms
 3. **Language Features**: Ready for future adoption of Java 9-11 language features
-4. **Long-term Support**: Java 11 LTS provides extended support lifecycle
+4. **Long-term Support**: Java 18 LTS provides extended support lifecycle
 
 ## Areas With Minimal Changes
 
 The following areas required no or minimal modifications:
 - **TLS Configuration**: Application uses Spring Boot defaults, no custom TLS setup
-- **GC Logging**: No custom GC logging was configured, using Java 11 defaults
+- **GC Logging**: No custom GC logging was configured, using Java 18 defaults
 - **Module System**: Staying on classpath (not adopting JPMS modules)
 
 ## Future Considerations
 
 1. **Optional Modernizations** (future PRs):
    - Adopt `var` keyword for local variables (Java 10+)
-   - Use new HTTP Client API (Java 11+) if external HTTP calls are added
+   - Use new HTTP Client API (Java 18+) if external HTTP calls are added
    - Consider adopting Java modules (JPMS) if project grows
 
 2. **Monitoring**:
@@ -143,11 +143,11 @@ If rollback to Java 8 is needed:
 
 ## Migration Completion
 
-- Java 11 build configuration
+- Java 18 build configuration
 - Dependencies for removed JDK modules
-- CI/CD updated to Java 11
+- CI/CD updated to Java 18
 - All tests passing
 - Documentation updated
 - Migration notes created
 
-The migration is complete and the application is ready for production deployment on Java 11.
+The migration is complete and the application is ready for production deployment on Java 18.

@@ -1,8 +1,8 @@
-# Spring Boot Compatibility Analysis: Java 11 Migration
+# Spring Boot Compatibility Analysis: Java 18 Migration
 
 ## Executive Summary
 
-This document analyzes the compatibility of Spring Boot 2.1.4.RELEASE with Java 11 and provides a detailed upgrade path to Spring Boot 2.7.18 (the latest 2.x LTS version). The analysis covers breaking changes, affected dependencies, and recommended migration strategies.
+This document analyzes the compatibility of Spring Boot 2.1.4.RELEASE with Java 18 and provides a detailed upgrade path to Spring Boot 2.7.18 (the latest 2.x LTS version). The analysis covers breaking changes, affected dependencies, and recommended migration strategies.
 
 ## Current Project Configuration
 
@@ -17,26 +17,26 @@ The BankApp project currently uses:
 | Lombok | 1.18.6 (managed by Spring Boot) |
 | Springfox Swagger | 2.9.2 / 2.10.0 |
 
-## Java 11 Compatibility Analysis
+## Java 18 Compatibility Analysis
 
-### Spring Boot 2.1.x and Java 11
+### Spring Boot 2.1.x and Java 18
 
-Spring Boot 2.1 (released October 2018) was the first version to officially support Java 11. According to the official Spring Boot 2.1 Release Notes:
+Spring Boot 2.1 (released October 2018) was the first version to officially support Java 18. According to the official Spring Boot 2.1 Release Notes:
 
-> "Spring Boot 2.1 remains compatible with Java 8 but now also supports Java 11. We have continuous integration configured to build and test Spring Boot against the latest Java 11 release."
+> "Spring Boot 2.1 remains compatible with Java 11 but now also supports Java 18. We have continuous integration configured to build and test Spring Boot against the latest Java 18 release."
 
-**Key Finding**: Spring Boot 2.1.4.RELEASE is compatible with Java 11. However, upgrading to Spring Boot 2.7.18 is recommended for the following reasons:
+**Key Finding**: Spring Boot 2.1.4.RELEASE is compatible with Java 18. However, upgrading to Spring Boot 2.7.18 is recommended for the following reasons:
 
 1. Spring Boot 2.1.x reached end of OSS support in October 2019
-2. Spring Boot 2.7.x provides better Java 11 optimization and security patches
+2. Spring Boot 2.7.x provides better Java 18 optimization and security patches
 3. Spring Boot 2.7.x includes important dependency updates and bug fixes
 4. Spring Boot 2.7.x has enterprise support until June 2029
 
-### Minimum Spring Boot Version for Java 11
+### Minimum Spring Boot Version for Java 18
 
 | Java Version | Minimum Spring Boot Version | Recommended Version |
 |--------------|----------------------------|---------------------|
-| Java 11 | 2.1.0.RELEASE | 2.7.18 |
+| Java 18 | 2.1.0.RELEASE | 2.7.18 |
 | Java 17 | 2.5.0.RELEASE | 3.x (requires migration) |
 | Java 21 | 3.1.0 | 3.4.x |
 
@@ -352,7 +352,7 @@ spring.main.allow-circular-references=true
 
 ## Conclusion
 
-Spring Boot 2.1.4.RELEASE is compatible with Java 11, making the Java version upgrade straightforward. However, upgrading to Spring Boot 2.7.18 is strongly recommended to benefit from security patches, bug fixes, and improved Java 11 support.
+Spring Boot 2.1.4.RELEASE is compatible with Java 18, making the Java version upgrade straightforward. However, upgrading to Spring Boot 2.7.18 is strongly recommended to benefit from security patches, bug fixes, and improved Java 18 support.
 
 The main areas requiring attention during the upgrade are:
 1. Springfox Swagger migration or workaround

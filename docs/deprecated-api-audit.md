@@ -1,4 +1,4 @@
-# Java 11 Migration - Deprecated API Audit Report
+# Java 18 Migration - Deprecated API Audit Report
 
 **Project:** BankApp (java-migration-8-11)  
 **Audit Date:** December 14, 2025  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This audit identifies deprecated APIs, removed JDK modules, and JDK internal API usage that may impact the migration from Java 8 to Java 11. The analysis was performed using `jdeps` and `jdeprscan` tools, along with manual code inspection.
+This audit identifies deprecated APIs, removed JDK modules, and JDK internal API usage that may impact the migration from Java 11 to Java 18. The analysis was performed using `jdeps` and `jdeprscan` tools, along with manual code inspection.
 
 **Key Findings:**
 - No direct usage of removed Java EE modules (JAXB, JAX-WS, CORBA, JavaFX, Nashorn) in application code
@@ -30,7 +30,7 @@ javax.activation:javax.activation-api:jar:1.2.0:compile
 ```
 
 **Risk Level:** LOW  
-**Remediation:** No action required. Spring Boot 2.1.4 already includes the necessary JAXB dependencies for Java 11 compatibility.
+**Remediation:** No action required. Spring Boot 2.1.4 already includes the necessary JAXB dependencies for Java 18 compatibility.
 
 ### 1.2 JAX-WS (Java API for XML Web Services)
 
@@ -86,15 +86,15 @@ javax.transaction:javax.transaction-api:jar:1.3:compile
 
 ## 2. JDK Internal API Usage (jdeps Analysis)
 
-The following dependencies use JDK internal APIs that may trigger illegal reflective access warnings on Java 11:
+The following dependencies use JDK internal APIs that may trigger illegal reflective access warnings on Java 18:
 
 ### 2.1 Critical - Removed Internal API
 
 | Dependency | Internal API | Status | Risk |
 |------------|--------------|--------|------|
-| logback-classic-1.2.3.jar | sun.reflect.Reflection | REMOVED in Java 11 | HIGH |
+| logback-classic-1.2.3.jar | sun.reflect.Reflection | REMOVED in Java 18 | HIGH |
 
-**Remediation:** Upgrade to logback-classic 1.2.9+ which includes Java 11 compatibility fixes.
+**Remediation:** Upgrade to logback-classic 1.2.9+ which includes Java 18 compatibility fixes.
 
 ### 2.2 JDK Unsupported APIs (sun.misc.Unsafe)
 
@@ -109,10 +109,10 @@ These dependencies use `sun.misc.Unsafe` which is moved to `jdk.unsupported` mod
 | spring-core-5.1.6.RELEASE.jar | UnsafeFactoryInstantiator, DefineClassHelper, UnsafeUtils |
 
 **Risk Level:** MEDIUM  
-**Impact:** These will generate warnings but continue to work on Java 11.  
+**Impact:** These will generate warnings but continue to work on Java 18.  
 **Remediation:** 
-- Upgrade Guava from 20.0 to 31.0+ for better Java 11 support
-- Upgrade Lombok from 1.18.6 to 1.18.20+ for Java 11 compatibility
+- Upgrade Guava from 20.0 to 31.0+ for better Java 18 support
+- Upgrade Lombok from 1.18.6 to 1.18.20+ for Java 18 compatibility
 - Spring Boot upgrade will bring updated versions of other dependencies
 
 ### 2.3 JDK Compiler Internal APIs
@@ -125,7 +125,7 @@ These dependencies use `sun.misc.Unsafe` which is moved to `jdk.unsupported` mod
 | lombok-1.18.6.jar | com.sun.tools.javac.util.Options |
 
 **Risk Level:** MEDIUM  
-**Remediation:** Upgrade Lombok to 1.18.20+ which has proper Java 11 support.
+**Remediation:** Upgrade Lombok to 1.18.20+ which has proper Java 18 support.
 
 ## 3. Deprecated API Usage in Application Code
 
@@ -133,7 +133,7 @@ These dependencies use `sun.misc.Unsafe` which is moved to `jdk.unsupported` mod
 
 **Result:** No deprecated APIs found in application code (`target/classes`).
 
-The application code does not directly use any APIs deprecated for removal in Java 11.
+The application code does not directly use any APIs deprecated for removal in Java 18.
 
 ### 3.2 Manual Code Review Findings
 
@@ -152,21 +152,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 **Status:** Not deprecated in Spring Security 5.1.5 (current version)  
 **Note:** This class is deprecated in Spring Security 5.7+ but works fine with the current Spring Boot 2.1.4 version.  
-**Risk Level:** LOW (for Java 11 migration)  
+**Risk Level:** LOW (for Java 18 migration)  
 **Future Consideration:** If upgrading Spring Boot beyond 2.7.x, this will need to be refactored to component-based security configuration.
 
 #### 3.2.2 Springfox Swagger Configuration
 
 **File:** `src/main/java/com/coding/exercise/bankapp/config/ApplicationConfig.java`
 
-**Status:** Springfox 2.9.2 is compatible with Java 11 but has known issues with Spring Boot 2.6+  
-**Risk Level:** LOW (for Java 11 migration with current Spring Boot version)
+**Status:** Springfox 2.9.2 is compatible with Java 18 but has known issues with Spring Boot 2.6+  
+**Risk Level:** LOW (for Java 18 migration with current Spring Boot version)
 
 ## 4. Dependency Inventory
 
 ### 4.1 Current Dependencies Summary
 
-| Category | Dependency | Version | Java 11 Compatible |
+| Category | Dependency | Version | Java 18 Compatible |
 |----------|------------|---------|-------------------|
 | Framework | Spring Boot | 2.1.4.RELEASE | Yes |
 | ORM | Hibernate | 5.3.9.Final | Yes |
@@ -200,7 +200,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 ### 5.2 Overall Migration Risk: LOW to MEDIUM
 
-The codebase is well-positioned for Java 11 migration with minimal changes required.
+The codebase is well-positioned for Java 18 migration with minimal changes required.
 
 ## 6. Remediation Plan
 
@@ -216,12 +216,12 @@ The codebase is well-positioned for Java 11 migration with minimal changes requi
 2. **Upgrade Lombok** (MEDIUM Priority)
    - Current: 1.18.6
    - Target: 1.18.20+
-   - Reason: Better Java 11 compiler API support
+   - Reason: Better Java 18 compiler API support
 
 3. **Consider Spring Boot Upgrade** (MEDIUM Priority)
    - Current: 2.1.4.RELEASE
-   - Target: 2.5.x or 2.7.x (for Java 11 LTS support)
-   - Benefits: Updated dependencies with better Java 11 support
+   - Target: 2.5.x or 2.7.x (for Java 18 LTS support)
+   - Benefits: Updated dependencies with better Java 18 support
 
 ### 6.3 Optional Changes (Post-Migration)
 
@@ -237,7 +237,7 @@ The codebase is well-positioned for Java 11 migration with minimal changes requi
 ```xml
 <properties>
     <java.version>11</java.version>
-    <!-- or use maven.compiler.release for Java 11+ -->
+    <!-- or use maven.compiler.release for Java 18+ -->
     <maven.compiler.release>11</maven.compiler.release>
 </properties>
 ```
@@ -250,7 +250,7 @@ The codebase is well-positioned for Java 11 migration with minimal changes requi
 
 ## 8. Testing Recommendations
 
-1. Run full test suite on Java 11 JDK
+1. Run full test suite on Java 18 JDK
 2. Monitor for illegal reflective access warnings in logs
 3. Verify H2 console access works correctly
 4. Test Swagger UI functionality
@@ -258,11 +258,11 @@ The codebase is well-positioned for Java 11 migration with minimal changes requi
 
 ## 9. Conclusion
 
-The BankApp codebase is in good condition for Java 11 migration. The application code does not use any deprecated or removed APIs directly. The main concerns are related to third-party dependencies using JDK internal APIs, which can be addressed through dependency upgrades.
+The BankApp codebase is in good condition for Java 18 migration. The application code does not use any deprecated or removed APIs directly. The main concerns are related to third-party dependencies using JDK internal APIs, which can be addressed through dependency upgrades.
 
 **Recommended Migration Approach:**
 1. Upgrade Lombok to 1.18.20+
-2. Update pom.xml to target Java 11
+2. Update pom.xml to target Java 18
 3. Upgrade maven plugins
 4. Run tests and address any issues
 5. Consider Spring Boot upgrade for long-term maintainability
