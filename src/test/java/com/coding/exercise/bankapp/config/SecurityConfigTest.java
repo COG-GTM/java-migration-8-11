@@ -1,5 +1,6 @@
 package com.coding.exercise.bankapp.config;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,7 +25,7 @@ class SecurityConfigTest {
         int statusCode = mockMvc.perform(get("/"))
                 .andReturn().getResponse().getStatus();
         // Should be anything other than 401 (likely 404 since no root mapping)
-        assert statusCode != 401 : "Root path should not require authentication";
+        assertNotEquals(401, statusCode, "Root path should not require authentication");
     }
 
     @Test
@@ -33,7 +34,7 @@ class SecurityConfigTest {
         int statusCode = mockMvc.perform(get("/h2-console/"))
                 .andReturn().getResponse().getStatus();
         // Should not return 401 (may return 200 or 404 depending on H2 console availability)
-        assert statusCode != 401 : "H2 console path should not require authentication";
+        assertNotEquals(401, statusCode, "H2 console path should not require authentication");
     }
 
     @Test
@@ -46,7 +47,7 @@ class SecurityConfigTest {
                                 .content("{}"))
                 .andReturn().getResponse().getStatus();
         // Should not be 403 Forbidden (CSRF rejection) - would be 404 since path doesn't exist
-        assert statusCode != 403 : "CSRF should be disabled";
+        assertNotEquals(403, statusCode, "CSRF should be disabled");
     }
 
     @Test
