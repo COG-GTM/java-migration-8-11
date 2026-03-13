@@ -1,6 +1,8 @@
 package com.coding.exercise.bankapp.config;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,7 +54,7 @@ class SecurityConfigTest {
                         .content(customerJson))
                 .andExpect(result -> {
                     int statusCode = result.getResponse().getStatus();
-                    assert statusCode != 403 : "Expected non-403 status but got 403, CSRF may not be disabled";
+                    assertNotEquals(403, statusCode, "Expected non-403 status but got 403, CSRF may not be disabled");
                 });
     }
 
@@ -62,7 +64,7 @@ class SecurityConfigTest {
         mockMvc.perform(get("/customers/all"))
                 .andExpect(result -> {
                     String frameOptions = result.getResponse().getHeader("X-Frame-Options");
-                    assert frameOptions == null : "Expected X-Frame-Options to be absent but was: " + frameOptions;
+                    assertNull(frameOptions, "Expected X-Frame-Options to be absent but was: " + frameOptions);
                 });
     }
 }
