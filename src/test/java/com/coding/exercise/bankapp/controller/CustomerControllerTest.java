@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,7 +97,7 @@ public class CustomerControllerTest {
         when(bankingService.addCustomer(any(CustomerDetails.class)))
                 .thenReturn(ResponseEntity.status(HttpStatus.CREATED).body("New Customer created successfully."));
 
-        mockMvc.perform(post("/customers/add")
+        mockMvc.perform(post("/customers/add").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isCreated());
@@ -137,7 +138,7 @@ public class CustomerControllerTest {
         when(bankingService.updateCustomer(any(CustomerDetails.class), eq(12345L)))
                 .thenReturn(ResponseEntity.status(HttpStatus.OK).body("Success: Customer updated."));
 
-        mockMvc.perform(put("/customers/12345")
+        mockMvc.perform(put("/customers/12345").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isOk());
@@ -152,7 +153,7 @@ public class CustomerControllerTest {
         when(bankingService.updateCustomer(any(CustomerDetails.class), eq(99999L)))
                 .thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer Number 99999 not found."));
 
-        mockMvc.perform(put("/customers/99999")
+        mockMvc.perform(put("/customers/99999").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isNotFound());
@@ -166,7 +167,7 @@ public class CustomerControllerTest {
         when(bankingService.deleteCustomer(12345L))
                 .thenReturn(ResponseEntity.status(HttpStatus.OK).body("Success: Customer deleted."));
 
-        mockMvc.perform(delete("/customers/12345"))
+        mockMvc.perform(delete("/customers/12345").with(csrf()))
                 .andExpect(status().isOk());
 
         verify(bankingService).deleteCustomer(12345L);
@@ -178,7 +179,7 @@ public class CustomerControllerTest {
         when(bankingService.deleteCustomer(99999L))
                 .thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer does not exist."));
 
-        mockMvc.perform(delete("/customers/99999"))
+        mockMvc.perform(delete("/customers/99999").with(csrf()))
                 .andExpect(status().isBadRequest());
 
         verify(bankingService).deleteCustomer(99999L);

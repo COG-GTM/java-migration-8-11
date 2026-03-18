@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -97,7 +98,7 @@ public class AccountControllerTest {
         when(bankingService.addNewAccount(any(AccountInformation.class), eq(12345L)))
                 .thenReturn(ResponseEntity.status(HttpStatus.CREATED).body("New Account created successfully."));
 
-        mockMvc.perform(post("/accounts/add/12345")
+        mockMvc.perform(post("/accounts/add/12345").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(accountInfo)))
                 .andExpect(status().isCreated());
@@ -116,7 +117,7 @@ public class AccountControllerTest {
         when(bankingService.transferDetails(any(TransferDetails.class), eq(12345L)))
                 .thenReturn(ResponseEntity.status(HttpStatus.OK).body("Success: Amount transferred for Customer Number 12345"));
 
-        mockMvc.perform(put("/accounts/transfer/12345")
+        mockMvc.perform(put("/accounts/transfer/12345").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(transferDetails)))
                 .andExpect(status().isOk());
@@ -135,7 +136,7 @@ public class AccountControllerTest {
         when(bankingService.transferDetails(any(TransferDetails.class), eq(12345L)))
                 .thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient Funds."));
 
-        mockMvc.perform(put("/accounts/transfer/12345")
+        mockMvc.perform(put("/accounts/transfer/12345").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(transferDetails)))
                 .andExpect(status().isBadRequest());
@@ -154,7 +155,7 @@ public class AccountControllerTest {
         when(bankingService.transferDetails(any(TransferDetails.class), eq(99999L)))
                 .thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer Number 99999 not found."));
 
-        mockMvc.perform(put("/accounts/transfer/99999")
+        mockMvc.perform(put("/accounts/transfer/99999").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(transferDetails)))
                 .andExpect(status().isNotFound());
