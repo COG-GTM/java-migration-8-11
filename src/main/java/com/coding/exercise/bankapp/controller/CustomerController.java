@@ -2,6 +2,8 @@ package com.coding.exercise.bankapp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +48,7 @@ public class CustomerController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> addCustomer(@RequestBody CustomerDetails customer) {
+	public ResponseEntity<Object> addCustomer(@Valid @RequestBody CustomerDetails customer) {
 
 		return bankingService.addCustomer(customer);
 	}
@@ -69,7 +71,7 @@ public class CustomerController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDetails customerDetails,
+	public ResponseEntity<Object> updateCustomer(@Valid @RequestBody CustomerDetails customerDetails,
 			@PathVariable Long customerNumber) {
 
 		return bankingService.updateCustomer(customerDetails, customerNumber);

@@ -2,6 +2,9 @@ package com.coding.exercise.bankapp.domain;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +24,11 @@ public class AccountInformation {
 	
 	private String accountStatus;
 	
+	@NotNull(message = "Account type is required")
 	private String accountType;
 	
+	@NotNull(message = "Account balance is required")
+	@PositiveOrZero(message = "Account balance must be zero or positive")
 	private Double accountBalance;
 	
 	private Date accountCreated;
