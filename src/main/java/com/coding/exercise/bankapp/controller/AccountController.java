@@ -2,6 +2,8 @@ package com.coding.exercise.bankapp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +49,7 @@ public class AccountController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> addNewAccount(@RequestBody AccountInformation accountInformation,
+	public ResponseEntity<Object> addNewAccount(@Valid @RequestBody AccountInformation accountInformation,
 			@PathVariable Long customerNumber) {
 
 		return bankingService.addNewAccount(accountInformation, customerNumber);
@@ -59,7 +61,7 @@ public class AccountController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> transferDetails(@RequestBody TransferDetails transferDetails,
+	public ResponseEntity<Object> transferDetails(@Valid @RequestBody TransferDetails transferDetails,
 			@PathVariable Long customerNumber) {
 
 		return bankingService.transferDetails(transferDetails, customerNumber);
