@@ -27,6 +27,7 @@ public class AccountInformation {
 	@NotNull(message = "Account type is required")
 	private String accountType;
 	
+	@NotNull(message = "Account balance is required")
 	@PositiveOrZero(message = "Account balance must be zero or positive")
 	private Double accountBalance;
 	
