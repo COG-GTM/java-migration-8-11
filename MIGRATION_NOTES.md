@@ -151,3 +151,88 @@ If rollback to Java 8 is needed:
 - Migration notes created
 
 The migration is complete and the application is ready for production deployment on Java 11.
+
+---
+
+# Java 11 to Java 18 / Spring Boot 2.7.18 to 3.2.5 Migration Notes
+
+## Overview
+
+This section documents the migration from Java 11 / Spring Boot 2.7.18 to Java 18 / Spring Boot 3.2.5. This is a major migration involving namespace changes, security rewrites, and dependency upgrades.
+
+## Changes Made
+
+### 1. Build Configuration (`pom.xml`)
+
+- **Spring Boot Parent**: `2.7.18` → `3.2.5`
+- **Java Version**: `11` → `18`
+- **maven.compiler.release**: `11` → `18`
+- **maven-compiler-plugin release**: `11` → `18`
+- **maven-enforcer-plugin requireJavaVersion**: `[11,)` → `[18,)`
+
+### 2. javax → jakarta Namespace Migration
+
+Spring Boot 3.x requires Jakarta EE 9+ which uses the `jakarta.*` namespace instead of `javax.*`. All JPA entity imports were updated:
+
+**Files Updated (7 model files)**:
+- `model/Customer.java`
+- `model/Account.java`
+- `model/Transaction.java`
+- `model/Address.java`
+- `model/Contact.java`
+- `model/BankInfo.java`
+- `model/CustomerAccountXRef.java`
+
+**Example Change**:
+```java
+// Before
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+// After
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+```
+
+### 3. Spring Security Configuration Rewrite
+
+Spring Security 6.x (included in Spring Boot 3.2.x) removes `WebSecurityConfigurerAdapter`. The `SecurityConfig` class was completely rewritten:
+
+**Key Changes**:
+- Removed `extends WebSecurityConfigurerAdapter`
+- Added `@EnableWebSecurity` annotation
+- Replaced `configure(HttpSecurity)` override with `@Bean SecurityFilterChain`
+- `.antMatchers()` → `.requestMatchers()`
+- `.authorizeRequests()` → `.authorizeHttpRequests()`
+- Adopted lambda-style DSL (e.g., `.csrf(csrf -> csrf.disable())`)
+
+### 4. SpringDoc OpenAPI 1.x → 2.x
+
+- **Removed**: `org.springdoc:springdoc-openapi-ui:1.6.15`
+- **Added**: `org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0`
+
+SpringDoc 2.x is required for Spring Boot 3.x compatibility. The `ApplicationConfig.java` and controller annotations (`@Tag`, `@Operation`, `@ApiResponse`) did not require changes as they use `io.swagger.v3.oas` which is the same in both versions.
+
+### 5. JAXB Runtime 2.x → 4.x
+
+- **Updated**: `org.glassfish.jaxb:jaxb-runtime` from `2.3.8` to `4.0.4`
+
+JAXB 4.x aligns with the Jakarta EE namespace migration (jakarta.xml.bind).
+
+### 6. CI/CD Updates
+
+- **GitHub Actions**: Updated JDK version from `11` to `18` with Temurin distribution in `.github/workflows/ci.yml`
+
+## Files NOT Changed
+
+The following files required no modifications:
+- `ApplicationConfig.java` — already uses `io.swagger.v3.oas.models.OpenAPI` (compatible with SpringDoc 2.x)
+- Controller annotations (`@Tag`, `@Operation`, `@ApiResponse`) — same in SpringDoc 2.x
+- `BankingApplicationTests.java` — already on JUnit 5
+- `application.yml` — no changes needed
+- Domain/DTO classes — no `javax` imports
+
+## Notes
+
+- Java 18 is NOT an LTS release. Consider upgrading to Java 21 (LTS) in the future — the migration steps would be identical.
+- Spring Boot 3.2.x requires a minimum of Java 17.
