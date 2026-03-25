@@ -3,6 +3,7 @@ package com.coding.exercise.bankapp.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
  * 
@@ -20,7 +21,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests().antMatchers("/").permitAll().and()
                 .authorizeRequests().antMatchers("/h2-console/**").permitAll();
 
-        httpSecurity.csrf().disable();
-        httpSecurity.headers().frameOptions().disable();
+        httpSecurity.csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        httpSecurity.headers().frameOptions().sameOrigin();
     }
 }
