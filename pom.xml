@@ -51,12 +51,13 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>1.18.44</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.15</version>
+			<version>1.8.0</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -81,7 +82,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.11.0</version>
+					<version>3.15.0</version>
 					<configuration>
 						<release>11</release>
 						<compilerArgs>
@@ -92,17 +93,17 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.2.5</version>
+					<version>3.5.5</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>3.2.5</version>
+					<version>3.5.5</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>3.6.2</version>
 					<executions>
 						<execution>
 							<goals><goal>enforce</goal></goals>
@@ -119,7 +120,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.6.3</version>
+					<version>3.12.0</version>
 					<configuration>
 						<additionalJOption>-Xdoclint:none</additionalJOption>
 					</configuration>
