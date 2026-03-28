@@ -81,8 +81,8 @@
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>3.15.0</version>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.15.0</version>
 					<configuration>
 						<release>11</release>
 						<compilerArgs>
@@ -92,18 +92,18 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>3.5.5</version>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.5.5</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-failsafe-plugin</artifactId>
-						<version>3.5.5</version>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>3.5.5</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<version>3.6.2</version>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.6.2</version>
 					<executions>
 						<execution>
 							<goals><goal>enforce</goal></goals>
@@ -119,8 +119,8 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.12.0</version>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.12.0</version>
 					<configuration>
 						<additionalJOption>-Xdoclint:none</additionalJOption>
 					</configuration>
