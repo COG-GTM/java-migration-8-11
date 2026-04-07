@@ -133,8 +133,8 @@ public class BankingServiceImpl implements BankingService {
 	/**
 	 * DELETE Customer
 	 * 
-	 * Deletes all associated CustomerAccountXRef entries and their accounts
-	 * before deleting the customer to avoid orphaned data.
+	 * Deletes all associated transactions, accounts, and CustomerAccountXRef
+	 * entries before deleting the customer to avoid orphaned data.
 	 * 
 	 * @param customerNumber
 	 * @return
@@ -146,12 +146,15 @@ public class BankingServiceImpl implements BankingService {
 		if(managedCustomerEntityOpt.isPresent()) {
 			Customer managedCustomerEntity = managedCustomerEntityOpt.get();
 			
-			// Delete all customer entries from CustomerAccountXRef and associated accounts
-			List<CustomerAccountXRef> xrefs = custAccXRefRepository.findByCustomerNumber(customerNumber);
-			for (CustomerAccountXRef xref : xrefs) {
-				accountRepository.findByAccountNumber(xref.getAccountNumber())
-						.ifPresent(accountRepository::delete);
-			}
+				// Delete all customer entries from CustomerAccountXRef, associated transactions, and accounts
+				List<CustomerAccountXRef> xrefs = custAccXRefRepository.findByCustomerNumber(customerNumber);
+				for (CustomerAccountXRef xref : xrefs) {
+					// Delete transactions for the account before deleting the account itself
+					transactionRepository.findByAccountNumber(xref.getAccountNumber())
+							.ifPresent(transactionRepository::deleteAll);
+					accountRepository.findByAccountNumber(xref.getAccountNumber())
+							.ifPresent(accountRepository::delete);
+				}
 			custAccXRefRepository.deleteAll(xrefs);
 			
 			customerRepository.delete(managedCustomerEntity);
