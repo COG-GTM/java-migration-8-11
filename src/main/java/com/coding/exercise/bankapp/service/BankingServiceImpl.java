@@ -209,12 +209,13 @@ public class BankingServiceImpl implements BankingService {
 	/**
 	 * Transfer funds from one account to another for a specific customer.
 	 * 
-	 * All account reads, balance validation, and updates happen inside the
-	 * synchronized block to prevent race conditions between concurrent transfers.
-	 * Uses SERIALIZABLE isolation for database-level consistency.
+	 * Uses SERIALIZABLE isolation to prevent concurrent transfers from causing
+	 * inconsistent balances. The database will reject conflicting concurrent
+	 * transactions at commit time with a serialization failure.
 	 * 
-	 * Note: synchronized(this) only works within a single JVM instance.
-	 * For multi-instance deployments, consider database-level pessimistic locking.
+	 * For production use, consider adding pessimistic locking
+	 * (@Lock(PESSIMISTIC_WRITE) on repository queries) or optimistic locking
+	 * (@Version on Account entity) with retry logic for graceful conflict handling.
 	 * 
 	 * @param transferDetails
 	 * @param customerNumber
@@ -223,54 +224,51 @@ public class BankingServiceImpl implements BankingService {
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public ResponseEntity<Object> transferDetails(TransferDetails transferDetails, Long customerNumber) {
 		
+		List<Account> accountEntities = new ArrayList<>();
+		
 		Optional<Customer> customerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
 
 		// If customer is present
 		if(customerEntityOpt.isPresent()) {
 			
-			synchronized (this) {
-				// Read accounts inside synchronized block to prevent stale reads
-				List<Account> accountEntities = new ArrayList<>();
-				
-				// get FROM ACCOUNT info
-				Optional<Account> fromAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getFromAccountNumber());
-				if(!fromAccountEntityOpt.isPresent()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("From Account Number " + transferDetails.getFromAccountNumber() + " not found.");
-				}
-				Account fromAccountEntity = fromAccountEntityOpt.get();
-				
-				// get TO ACCOUNT info
-				Optional<Account> toAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getToAccountNumber());
-				if(!toAccountEntityOpt.isPresent()) {
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("To Account Number " + transferDetails.getToAccountNumber() + " not found.");
-				}
-				Account toAccountEntity = toAccountEntityOpt.get();
-
-				// Validate funds with fresh data
-				if(fromAccountEntity.getAccountBalance() < transferDetails.getTransferAmount()) {
-					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient Funds.");
-				}
-				
-				// update FROM ACCOUNT 
-				fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
-				fromAccountEntity.setUpdateDateTime(LocalDateTime.now());
-				accountEntities.add(fromAccountEntity);
-				
-				// update TO ACCOUNT
-				toAccountEntity.setAccountBalance(toAccountEntity.getAccountBalance() + transferDetails.getTransferAmount());
-				toAccountEntity.setUpdateDateTime(LocalDateTime.now());
-				accountEntities.add(toAccountEntity);
-				
-				accountRepository.saveAll(accountEntities);
-				
-				// Create transaction for FROM Account
-				Transaction fromTransaction = bankingServiceHelper.createTransaction(transferDetails, fromAccountEntity.getAccountNumber(), "DEBIT");
-				transactionRepository.save(fromTransaction);
-				
-				// Create transaction for TO Account
-				Transaction toTransaction = bankingServiceHelper.createTransaction(transferDetails, toAccountEntity.getAccountNumber(), "CREDIT");
-				transactionRepository.save(toTransaction);
+			// get FROM ACCOUNT info
+			Optional<Account> fromAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getFromAccountNumber());
+			if(!fromAccountEntityOpt.isPresent()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("From Account Number " + transferDetails.getFromAccountNumber() + " not found.");
 			}
+			Account fromAccountEntity = fromAccountEntityOpt.get();
+			
+			// get TO ACCOUNT info
+			Optional<Account> toAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getToAccountNumber());
+			if(!toAccountEntityOpt.isPresent()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("To Account Number " + transferDetails.getToAccountNumber() + " not found.");
+			}
+			Account toAccountEntity = toAccountEntityOpt.get();
+
+			// Validate sufficient funds
+			if(fromAccountEntity.getAccountBalance() < transferDetails.getTransferAmount()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient Funds.");
+			}
+			
+			// update FROM ACCOUNT 
+			fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
+			fromAccountEntity.setUpdateDateTime(LocalDateTime.now());
+			accountEntities.add(fromAccountEntity);
+			
+			// update TO ACCOUNT
+			toAccountEntity.setAccountBalance(toAccountEntity.getAccountBalance() + transferDetails.getTransferAmount());
+			toAccountEntity.setUpdateDateTime(LocalDateTime.now());
+			accountEntities.add(toAccountEntity);
+			
+			accountRepository.saveAll(accountEntities);
+			
+			// Create transaction for FROM Account
+			Transaction fromTransaction = bankingServiceHelper.createTransaction(transferDetails, fromAccountEntity.getAccountNumber(), "DEBIT");
+			transactionRepository.save(fromTransaction);
+			
+			// Create transaction for TO Account
+			Transaction toTransaction = bankingServiceHelper.createTransaction(transferDetails, toAccountEntity.getAccountNumber(), "CREDIT");
+			transactionRepository.save(toTransaction);
 
 			return ResponseEntity.status(HttpStatus.OK).body("Success: Amount transferred for Customer Number " + customerNumber);
 				
