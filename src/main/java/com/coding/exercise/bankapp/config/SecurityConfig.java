@@ -15,12 +15,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // Note: WebSecurityConfigurerAdapter is deprecated in Spring Security 5.7+.
+    // Migration to SecurityFilterChain bean requires Spring Boot 2.7+.
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/").permitAll().and()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll();
-
-        httpSecurity.csrf().disable();
-        httpSecurity.headers().frameOptions().disable();
+        httpSecurity
+                .authorizeRequests()
+                    .antMatchers("/", "/h2-console/**").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                .httpBasic()
+                .and()
+                .csrf().disable()
+                .headers().frameOptions().disable();
     }
 }

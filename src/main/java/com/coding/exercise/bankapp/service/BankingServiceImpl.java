@@ -1,14 +1,17 @@
 package com.coding.exercise.bankapp.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coding.exercise.bankapp.domain.AccountInformation;
@@ -69,7 +72,7 @@ public class BankingServiceImpl implements BankingService {
 	public ResponseEntity<Object> addCustomer(CustomerDetails customerDetails) {
 		
 		Customer customer = bankingServiceHelper.convertToCustomerEntity(customerDetails);
-		customer.setCreateDateTime(new Date());
+		customer.setCreateDateTime(LocalDateTime.now());
 		customerRepository.save(customer);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body("New Customer created successfully.");
@@ -105,37 +108,19 @@ public class BankingServiceImpl implements BankingService {
 		if(managedCustomerEntityOpt.isPresent()) {
 			Customer managedCustomerEntity = managedCustomerEntityOpt.get();
 			
-			if(Optional.ofNullable(unmanagedCustomerEntity.getContactDetails()).isPresent()) {
-				
-				Contact managedContact = managedCustomerEntity.getContactDetails();
-				if(managedContact != null) {
-					managedContact.setEmailId(unmanagedCustomerEntity.getContactDetails().getEmailId());
-					managedContact.setHomePhone(unmanagedCustomerEntity.getContactDetails().getHomePhone());
-					managedContact.setWorkPhone(unmanagedCustomerEntity.getContactDetails().getWorkPhone());
-				} else
-					managedCustomerEntity.setContactDetails(unmanagedCustomerEntity.getContactDetails());
+			if(unmanagedCustomerEntity.getContactDetails() != null) {
+				updateContact(managedCustomerEntity, unmanagedCustomerEntity.getContactDetails());
 			}
 			
-			if(Optional.ofNullable(unmanagedCustomerEntity.getCustomerAddress()).isPresent()) {
-				
-				Address managedAddress = managedCustomerEntity.getCustomerAddress();
-				if(managedAddress != null) {
-					managedAddress.setAddress1(unmanagedCustomerEntity.getCustomerAddress().getAddress1());
-					managedAddress.setAddress2(unmanagedCustomerEntity.getCustomerAddress().getAddress2());
-					managedAddress.setCity(unmanagedCustomerEntity.getCustomerAddress().getCity());
-					managedAddress.setState(unmanagedCustomerEntity.getCustomerAddress().getState());
-					managedAddress.setZip(unmanagedCustomerEntity.getCustomerAddress().getZip());
-					managedAddress.setCountry(unmanagedCustomerEntity.getCustomerAddress().getCountry());
-				} else
-					managedCustomerEntity.setCustomerAddress(unmanagedCustomerEntity.getCustomerAddress());
+			if(unmanagedCustomerEntity.getCustomerAddress() != null) {
+				updateAddress(managedCustomerEntity, unmanagedCustomerEntity.getCustomerAddress());
 			}
 			
-			managedCustomerEntity.setUpdateDateTime(new Date());
 			managedCustomerEntity.setStatus(unmanagedCustomerEntity.getStatus());
 			managedCustomerEntity.setFirstName(unmanagedCustomerEntity.getFirstName());
 			managedCustomerEntity.setMiddleName(unmanagedCustomerEntity.getMiddleName());
 			managedCustomerEntity.setLastName(unmanagedCustomerEntity.getLastName());
-			managedCustomerEntity.setUpdateDateTime(new Date());
+			managedCustomerEntity.setUpdateDateTime(LocalDateTime.now());
 			
 			customerRepository.save(managedCustomerEntity);
 			
@@ -148,6 +133,9 @@ public class BankingServiceImpl implements BankingService {
 	/**
 	 * DELETE Customer
 	 * 
+	 * Deletes all associated transactions, accounts, and CustomerAccountXRef
+	 * entries before deleting the customer to avoid orphaned data.
+	 * 
 	 * @param customerNumber
 	 * @return
 	 */
@@ -157,13 +145,23 @@ public class BankingServiceImpl implements BankingService {
 
 		if(managedCustomerEntityOpt.isPresent()) {
 			Customer managedCustomerEntity = managedCustomerEntityOpt.get();
+			
+				// Delete all customer entries from CustomerAccountXRef, associated transactions, and accounts
+				List<CustomerAccountXRef> xrefs = custAccXRefRepository.findByCustomerNumber(customerNumber);
+				for (CustomerAccountXRef xref : xrefs) {
+					// Delete transactions for the account before deleting the account itself
+					transactionRepository.findByAccountNumber(xref.getAccountNumber())
+							.ifPresent(transactionRepository::deleteAll);
+					accountRepository.findByAccountNumber(xref.getAccountNumber())
+							.ifPresent(accountRepository::delete);
+				}
+			custAccXRefRepository.deleteAll(xrefs);
+			
 			customerRepository.delete(managedCustomerEntity);
 			return ResponseEntity.status(HttpStatus.OK).body("Success: Customer deleted.");
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer does not exist.");
 		}
-		
-		//TODO: Delete all customer entries from CustomerAccountXRef
 	}
 
 	/**
@@ -205,23 +203,31 @@ public class BankingServiceImpl implements BankingService {
 					.customerNumber(customerNumber)
 					.build());
 			
+			return ResponseEntity.status(HttpStatus.CREATED).body("New Account created successfully.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found.");
 		}
-
-		return ResponseEntity.status(HttpStatus.CREATED).body("New Account created successfully.");
 	}
 
 	/**
-	 * Transfer funds from one account to another for a specific customer
+	 * Transfer funds from one account to another for a specific customer.
+	 * 
+	 * Uses SERIALIZABLE isolation to prevent concurrent transfers from causing
+	 * inconsistent balances. The database will reject conflicting concurrent
+	 * transactions at commit time with a serialization failure.
+	 * 
+	 * For production use, consider adding pessimistic locking
+	 * (@Lock(PESSIMISTIC_WRITE) on repository queries) or optimistic locking
+	 * (@Version on Account entity) with retry logic for graceful conflict handling.
 	 * 
 	 * @param transferDetails
 	 * @param customerNumber
 	 * @return
 	 */
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public ResponseEntity<Object> transferDetails(TransferDetails transferDetails, Long customerNumber) {
 		
 		List<Account> accountEntities = new ArrayList<>();
-		Account fromAccountEntity = null;
-		Account toAccountEntity = null;
 		
 		Optional<Customer> customerEntityOpt = customerRepository.findByCustomerNumber(customerNumber);
 
@@ -230,55 +236,44 @@ public class BankingServiceImpl implements BankingService {
 			
 			// get FROM ACCOUNT info
 			Optional<Account> fromAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getFromAccountNumber());
-			if(fromAccountEntityOpt.isPresent()) {
-				fromAccountEntity = fromAccountEntityOpt.get();
-			}
-			else {
-			// if from request does not exist, 404 Bad Request
+			if(!fromAccountEntityOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("From Account Number " + transferDetails.getFromAccountNumber() + " not found.");
 			}
-			
+			Account fromAccountEntity = fromAccountEntityOpt.get();
 			
 			// get TO ACCOUNT info
 			Optional<Account> toAccountEntityOpt = accountRepository.findByAccountNumber(transferDetails.getToAccountNumber());
-			if(toAccountEntityOpt.isPresent()) {
-				toAccountEntity = toAccountEntityOpt.get();
-			}
-			else {
-			// if from request does not exist, 404 Bad Request
+			if(!toAccountEntityOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("To Account Number " + transferDetails.getToAccountNumber() + " not found.");
 			}
+			Account toAccountEntity = toAccountEntityOpt.get();
 
-			
-			// if not sufficient funds, return 400 Bad Request
+			// Validate sufficient funds
 			if(fromAccountEntity.getAccountBalance() < transferDetails.getTransferAmount()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient Funds.");
 			}
-			else {
-				synchronized (this) {
-					// update FROM ACCOUNT 
-					fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
-					fromAccountEntity.setUpdateDateTime(new Date());
-					accountEntities.add(fromAccountEntity);
-					
-					// update TO ACCOUNT
-					toAccountEntity.setAccountBalance(toAccountEntity.getAccountBalance() + transferDetails.getTransferAmount());
-					toAccountEntity.setUpdateDateTime(new Date());
-					accountEntities.add(toAccountEntity);
-					
-					accountRepository.saveAll(accountEntities);
-					
-					// Create transaction for FROM Account
-					Transaction fromTransaction = bankingServiceHelper.createTransaction(transferDetails, fromAccountEntity.getAccountNumber(), "DEBIT");
-					transactionRepository.save(fromTransaction);
-					
-					// Create transaction for TO Account
-					Transaction toTransaction = bankingServiceHelper.createTransaction(transferDetails, toAccountEntity.getAccountNumber(), "CREDIT");
-					transactionRepository.save(toTransaction);
-				}
+			
+			// update FROM ACCOUNT 
+			fromAccountEntity.setAccountBalance(fromAccountEntity.getAccountBalance() - transferDetails.getTransferAmount());
+			fromAccountEntity.setUpdateDateTime(LocalDateTime.now());
+			accountEntities.add(fromAccountEntity);
+			
+			// update TO ACCOUNT
+			toAccountEntity.setAccountBalance(toAccountEntity.getAccountBalance() + transferDetails.getTransferAmount());
+			toAccountEntity.setUpdateDateTime(LocalDateTime.now());
+			accountEntities.add(toAccountEntity);
+			
+			accountRepository.saveAll(accountEntities);
+			
+			// Create transaction for FROM Account
+			Transaction fromTransaction = bankingServiceHelper.createTransaction(transferDetails, fromAccountEntity.getAccountNumber(), "DEBIT");
+			transactionRepository.save(fromTransaction);
+			
+			// Create transaction for TO Account
+			Transaction toTransaction = bankingServiceHelper.createTransaction(transferDetails, toAccountEntity.getAccountNumber(), "CREDIT");
+			transactionRepository.save(toTransaction);
 
-				return ResponseEntity.status(HttpStatus.OK).body("Success: Amount transferred for Customer Number " + customerNumber);
-			}
+			return ResponseEntity.status(HttpStatus.OK).body("Success: Amount transferred for Customer Number " + customerNumber);
 				
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer Number " + customerNumber + " not found.");
@@ -293,19 +288,42 @@ public class BankingServiceImpl implements BankingService {
 	 * @return
 	 */
 	public List<TransactionDetails> findTransactionsByAccountNumber(Long accountNumber) {
-		List<TransactionDetails> transactionDetails = new ArrayList<>();
 		Optional<Account> accountEntityOpt = accountRepository.findByAccountNumber(accountNumber);
 		if(accountEntityOpt.isPresent()) {
 			Optional<List<Transaction>> transactionEntitiesOpt = transactionRepository.findByAccountNumber(accountNumber);
-			if(transactionEntitiesOpt.isPresent()) {
-				transactionEntitiesOpt.get().forEach(transaction -> {
-					transactionDetails.add(bankingServiceHelper.convertToTransactionDomain(transaction));
-				});
-			}
+			return transactionEntitiesOpt
+					.map(transactions -> transactions.stream()
+							.map(bankingServiceHelper::convertToTransactionDomain)
+							.collect(Collectors.toList()))
+					.orElse(Collections.emptyList());
 		}
 		
-		return transactionDetails;
+		return Collections.emptyList();
 	}
 
+	private void updateContact(Customer managedCustomer, Contact newContact) {
+		Contact managedContact = managedCustomer.getContactDetails();
+		if (managedContact != null) {
+			managedContact.setEmailId(newContact.getEmailId());
+			managedContact.setHomePhone(newContact.getHomePhone());
+			managedContact.setWorkPhone(newContact.getWorkPhone());
+		} else {
+			managedCustomer.setContactDetails(newContact);
+		}
+	}
+
+	private void updateAddress(Customer managedCustomer, Address newAddress) {
+		Address managedAddress = managedCustomer.getCustomerAddress();
+		if (managedAddress != null) {
+			managedAddress.setAddress1(newAddress.getAddress1());
+			managedAddress.setAddress2(newAddress.getAddress2());
+			managedAddress.setCity(newAddress.getCity());
+			managedAddress.setState(newAddress.getState());
+			managedAddress.setZip(newAddress.getZip());
+			managedAddress.setCountry(newAddress.getCountry());
+		} else {
+			managedCustomer.setCustomerAddress(newAddress);
+		}
+	}
 
 }

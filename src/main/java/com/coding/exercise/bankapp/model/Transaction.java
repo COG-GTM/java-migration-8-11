@@ -1,6 +1,6 @@
 package com.coding.exercise.bankapp.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +28,7 @@ public class Transaction {
 	
 	private Long accountNumber;
 	
-	@Temporal(TemporalType.TIME)
-	private Date txDateTime;
+	private LocalDateTime txDateTime;
 	
 	private String txType;
 	
