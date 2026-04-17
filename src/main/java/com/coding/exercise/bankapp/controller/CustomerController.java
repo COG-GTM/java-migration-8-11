@@ -2,7 +2,9 @@ package com.coding.exercise.bankapp.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coding.exercise.bankapp.domain.CustomerDetails;
-import com.coding.exercise.bankapp.service.BankingServiceImpl;
+import com.coding.exercise.bankapp.service.BankingService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,8 +28,11 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = { "Customer REST endpoints" })
 public class CustomerController {
 
-	@Autowired
-	private BankingServiceImpl bankingService;
+	private final BankingService bankingService;
+
+	public CustomerController(BankingService bankingService) {
+		this.bankingService = bankingService;
+	}
 
 	@GetMapping(path = "/all")
 	@ApiOperation(value = "Find all customers", notes = "Gets details of all the customers")
@@ -46,9 +51,9 @@ public class CustomerController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> addCustomer(@RequestBody CustomerDetails customer) {
+	public ResponseEntity<CustomerDetails> addCustomer(@Valid @RequestBody CustomerDetails customer) {
 
-		return bankingService.addCustomer(customer);
+		return ResponseEntity.status(HttpStatus.CREATED).body(bankingService.addCustomer(customer));
 	}
 
 	@GetMapping(path = "/{customerNumber}")
@@ -69,10 +74,10 @@ public class CustomerController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> updateCustomer(@RequestBody CustomerDetails customerDetails,
+	public ResponseEntity<CustomerDetails> updateCustomer(@Valid @RequestBody CustomerDetails customerDetails,
 			@PathVariable Long customerNumber) {
 
-		return bankingService.updateCustomer(customerDetails, customerNumber);
+		return ResponseEntity.ok(bankingService.updateCustomer(customerDetails, customerNumber));
 	}
 
 	@DeleteMapping(path = "/{customerNumber}")
@@ -81,9 +86,10 @@ public class CustomerController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerNumber) {
+	public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerNumber) {
 
-		return bankingService.deleteCustomer(customerNumber);
+		bankingService.deleteCustomer(customerNumber);
+		return ResponseEntity.ok().build();
 	}
 
 }
