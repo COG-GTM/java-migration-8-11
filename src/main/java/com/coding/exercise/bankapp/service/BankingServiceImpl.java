@@ -184,9 +184,15 @@ public class BankingServiceImpl implements BankingService {
 			throw new CustomerNotFoundException(customerNumber);
 		}
 
-		// Acquire pessimistic locks in deterministic order (ascending account number) to prevent deadlocks
+		// Reject self-transfers
 		Long first = Math.min(transferDetails.getFromAccountNumber(), transferDetails.getToAccountNumber());
 		Long second = Math.max(transferDetails.getFromAccountNumber(), transferDetails.getToAccountNumber());
+
+		if(first.equals(second)) {
+			throw new IllegalArgumentException("Cannot transfer to the same account.");
+		}
+
+		// Acquire pessimistic locks in deterministic order (ascending account number) to prevent deadlocks
 
 		Account firstEntity = accountRepository
 				.findByAccountNumberForUpdate(first)
