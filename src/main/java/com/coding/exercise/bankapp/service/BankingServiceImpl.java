@@ -15,6 +15,7 @@ import com.coding.exercise.bankapp.domain.TransferDetails;
 import com.coding.exercise.bankapp.exception.AccountNotFoundException;
 import com.coding.exercise.bankapp.exception.CustomerNotFoundException;
 import com.coding.exercise.bankapp.exception.InsufficientFundsException;
+import com.coding.exercise.bankapp.exception.SelfTransferException;
 import com.coding.exercise.bankapp.model.Account;
 import com.coding.exercise.bankapp.model.Address;
 import com.coding.exercise.bankapp.model.Contact;
@@ -189,7 +190,7 @@ public class BankingServiceImpl implements BankingService {
 		Long second = Math.max(transferDetails.getFromAccountNumber(), transferDetails.getToAccountNumber());
 
 		if(first.equals(second)) {
-			throw new IllegalArgumentException("Cannot transfer to the same account.");
+			throw new SelfTransferException();
 		}
 
 		// Acquire pessimistic locks in deterministic order (ascending account number) to prevent deadlocks
