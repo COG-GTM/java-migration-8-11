@@ -81,7 +81,7 @@ public class BankingServiceImpl implements BankingService {
 		if(customerEntityOpt.isPresent())
 			return bankingServiceHelper.convertToCustomerDomain(customerEntityOpt.get());
 
-		return null;
+		throw new CustomerNotFoundException(customerNumber);
 	}
 
     @Override
@@ -184,14 +184,20 @@ public class BankingServiceImpl implements BankingService {
 			throw new CustomerNotFoundException(customerNumber);
 		}
 
-		// Use pessimistic locking for the transfer accounts
-		Account fromAccountEntity = accountRepository
-				.findByAccountNumberForUpdate(transferDetails.getFromAccountNumber())
-				.orElseThrow(() -> new AccountNotFoundException(transferDetails.getFromAccountNumber()));
+		// Acquire pessimistic locks in deterministic order (ascending account number) to prevent deadlocks
+		Long first = Math.min(transferDetails.getFromAccountNumber(), transferDetails.getToAccountNumber());
+		Long second = Math.max(transferDetails.getFromAccountNumber(), transferDetails.getToAccountNumber());
 
-		Account toAccountEntity = accountRepository
-				.findByAccountNumberForUpdate(transferDetails.getToAccountNumber())
-				.orElseThrow(() -> new AccountNotFoundException(transferDetails.getToAccountNumber()));
+		Account firstEntity = accountRepository
+				.findByAccountNumberForUpdate(first)
+				.orElseThrow(() -> new AccountNotFoundException(first));
+
+		Account secondEntity = accountRepository
+				.findByAccountNumberForUpdate(second)
+				.orElseThrow(() -> new AccountNotFoundException(second));
+
+		Account fromAccountEntity = first.equals(transferDetails.getFromAccountNumber()) ? firstEntity : secondEntity;
+		Account toAccountEntity = first.equals(transferDetails.getFromAccountNumber()) ? secondEntity : firstEntity;
 
 		if(fromAccountEntity.getAccountBalance() < transferDetails.getTransferAmount()) {
 			throw new InsufficientFundsException();
