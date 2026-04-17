@@ -2,7 +2,9 @@ package com.coding.exercise.bankapp.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coding.exercise.bankapp.domain.AccountInformation;
 import com.coding.exercise.bankapp.domain.TransactionDetails;
 import com.coding.exercise.bankapp.domain.TransferDetails;
-import com.coding.exercise.bankapp.service.BankingServiceImpl;
+import com.coding.exercise.bankapp.service.BankingService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,8 +29,11 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = { "Accounts and Transactions REST endpoints" })
 public class AccountController {
 
-	@Autowired
-	private BankingServiceImpl bankingService;
+	private final BankingService bankingService;
+
+	public AccountController(BankingService bankingService) {
+		this.bankingService = bankingService;
+	}
 
 	@GetMapping(path = "/{accountNumber}")
 	@ApiOperation(value = "Get account details", notes = "Find account details by account number")
@@ -36,9 +41,9 @@ public class AccountController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> getByAccountNumber(@PathVariable Long accountNumber) {
+	public ResponseEntity<AccountInformation> getByAccountNumber(@PathVariable Long accountNumber) {
 
-		return bankingService.findByAccountNumber(accountNumber);
+		return ResponseEntity.ok(bankingService.findByAccountNumber(accountNumber));
 	}
 
 	@PostMapping(path = "/add/{customerNumber}")
@@ -47,10 +52,10 @@ public class AccountController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> addNewAccount(@RequestBody AccountInformation accountInformation,
+	public ResponseEntity<AccountInformation> addNewAccount(@Valid @RequestBody AccountInformation accountInformation,
 			@PathVariable Long customerNumber) {
 
-		return bankingService.addNewAccount(accountInformation, customerNumber);
+		return ResponseEntity.status(HttpStatus.CREATED).body(bankingService.addNewAccount(accountInformation, customerNumber));
 	}
 
 	@PutMapping(path = "/transfer/{customerNumber}")
@@ -59,10 +64,10 @@ public class AccountController {
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 
-	public ResponseEntity<Object> transferDetails(@RequestBody TransferDetails transferDetails,
+	public ResponseEntity<String> transferDetails(@Valid @RequestBody TransferDetails transferDetails,
 			@PathVariable Long customerNumber) {
 
-		return bankingService.transferDetails(transferDetails, customerNumber);
+		return ResponseEntity.ok(bankingService.transferDetails(transferDetails, customerNumber));
 	}
 
 	@GetMapping(path = "/transactions/{accountNumber}")
