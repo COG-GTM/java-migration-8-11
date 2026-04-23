@@ -71,13 +71,26 @@ $ open http://localhost:8989/bank-api/h2-console/
 | server.servlet.context-path | No | /bank-api | Base path for all endpoints |
 | spring.security.user.name | No | bankapp | Basic auth username |
 | spring.security.user.password | No | changeit | Basic auth password |
-| spring.h2.console.enabled | No | true | Enable H2 database console |
+| spring.h2.console.enabled | No | false | Enable H2 database console (disabled by default; enable via `dev` profile) |
 | spring.datasource.url | No | jdbc:h2:mem:testdb | H2 database connection URL |
 
 **Configuration Files**:
 
-- `src/main/resources/application.yml` - Main application configuration
+- `src/main/resources/application.yml` - Main application configuration (H2 console disabled by default)
+- `src/main/resources/application-dev.yml` - Development profile overrides (enables H2 console)
 - `pom.xml` - Maven dependencies and build configuration
+
+**H2 Console Access**:
+
+The H2 database console is **disabled by default** for security. To enable it, run with the `dev` profile:
+
+```bash
+$ mvn spring-boot:run -Dspring-boot.run.profiles=dev
+# or
+$ java -jar target/bank-app-*.jar --spring.profiles.active=dev
+```
+
+The H2 console now requires authentication (same Basic Auth credentials: `bankapp` / `changeit`).
 
 ## Usage
 
