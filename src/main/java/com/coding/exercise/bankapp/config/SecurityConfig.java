@@ -17,10 +17,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/").permitAll().and()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll();
-
-        httpSecurity.csrf().disable();
-        httpSecurity.headers().frameOptions().disable();
+        httpSecurity
+            .csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .and()
+            .headers()
+                .frameOptions().sameOrigin()
+                .and()
+            .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .httpBasic();
     }
 }
