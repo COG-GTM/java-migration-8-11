@@ -151,3 +151,69 @@ If rollback to Java 8 is needed:
 - Migration notes created
 
 The migration is complete and the application is ready for production deployment on Java 11.
+
+---
+
+# Java 11 to 21 Migration Notes
+
+## Overview
+
+This document summarizes the changes made to migrate the BankApp from Java 11 to Java 21 (LTS), including the required upgrade from Spring Boot 2.7 to Spring Boot 3.2.
+
+## Changes Made
+
+### 1. Build Configuration Updates
+
+**Maven Configuration (`pom.xml`)**:
+- Updated Spring Boot parent from `2.7.18` to `3.2.5`
+- Updated `java.version` from `11` to `21`
+- Updated `maven.compiler.release` from `11` to `21`
+- Updated `maven-compiler-plugin` release target from `11` to `21`
+- Updated `maven-enforcer-plugin` to require Java `[21,)`
+- Replaced `springdoc-openapi-ui:1.6.15` with `springdoc-openapi-starter-webmvc-ui:2.3.0` (required for Spring Boot 3.x)
+- Removed `org.glassfish.jaxb:jaxb-runtime:2.3.8` (no longer needed with Jakarta EE)
+
+### 2. Jakarta EE Migration (javax → jakarta)
+
+Spring Boot 3.x requires Jakarta EE 10, which uses the `jakarta.*` namespace. All JPA entity classes were updated:
+- `javax.persistence.*` → `jakarta.persistence.*` in all 7 entity classes:
+  - `Account.java`, `Address.java`, `BankInfo.java`, `Contact.java`
+  - `Customer.java`, `CustomerAccountXRef.java`, `Transaction.java`
+
+### 3. Spring Security Migration
+
+**SecurityConfig.java**:
+- Removed `WebSecurityConfigurerAdapter` (removed in Spring Security 6.x)
+- Replaced with component-based `SecurityFilterChain` `@Bean` configuration
+- Migrated from `authorizeRequests()` / `antMatchers()` to `authorizeHttpRequests()` / `requestMatchers()`
+- Migrated from chained `.csrf().disable()` to lambda DSL `.csrf(csrf -> csrf.disable())`
+- Migrated from `.headers().frameOptions().disable()` to lambda DSL
+
+### 4. CI/CD Updates
+
+**GitHub Actions (`ci.yml`)**:
+- Updated `actions/setup-java` from JDK `11` to JDK `21`
+
+### 5. Documentation Updates
+
+- Updated `README.md` to reflect Java 21 and Spring Boot 3
+- Added Java 21 migration section to `MIGRATION_NOTES.md`
+
+## Java 21 Benefits Gained
+
+1. **Performance**: Generational ZGC, improved G1 GC, and general JVM optimizations
+2. **Virtual Threads**: Available for I/O-bound operations (Project Loom)
+3. **Pattern Matching**: Switch pattern matching and record patterns
+4. **Sequenced Collections**: New collection interfaces (SequencedCollection, SequencedSet, SequencedMap)
+5. **Security**: Updated security algorithms and TLS improvements
+6. **Long-term Support**: Java 21 LTS provides extended support lifecycle
+
+## Rollback Plan
+
+If rollback to Java 11 + Spring Boot 2.7 is needed:
+1. Revert `pom.xml` changes (Spring Boot parent, java.version, compiler settings)
+2. Revert `jakarta.persistence.*` imports back to `javax.persistence.*`
+3. Restore `WebSecurityConfigurerAdapter`-based SecurityConfig
+4. Revert `springdoc-openapi-starter-webmvc-ui` back to `springdoc-openapi-ui`
+5. Re-add `jaxb-runtime` dependency
+6. Update CI workflow back to JDK 11
