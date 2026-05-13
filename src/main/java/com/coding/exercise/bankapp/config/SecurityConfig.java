@@ -6,8 +6,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 /**
  * 
- * Spring security denied access to h2-console.
- * This configuration will resolve 403 forbidden error when accessing h2-console.
+ * Spring security configuration.
+ * Permits unauthenticated access to the H2 console and to the SpringDoc OpenAPI
+ * documentation endpoints (Swagger UI and the generated API docs).
  * 
  * @author sbathina
  *
@@ -17,8 +18,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/").permitAll().and()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll();
+        httpSecurity.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll();
 
         httpSecurity.csrf().disable();
         httpSecurity.headers().frameOptions().disable();
