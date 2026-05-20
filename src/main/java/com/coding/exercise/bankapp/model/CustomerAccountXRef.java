@@ -25,6 +25,7 @@ public class CustomerAccountXRef {
 	@Column(name="CUST_ACC_XREF_ID")
 	private UUID id;
 	
+	@Column(unique = true)
 	private Long accountNumber;
 	
 	private Long customerNumber;

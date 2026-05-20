@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="context-path" th:content="@{/}"/>
+    <title layout:title-pattern="$CONTENT_TITLE - BBVA Banking">BBVA Banking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+    <link th:href="@{/css/tokens.css}" rel="stylesheet"/>
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Header Fragment -->
+<header class="header" th:fragment="header">
+    <a class="header__brand" th:href="@{/dashboard}">
+        <span class="header__brand-icon">B</span>
+        BBVA Net Cash
+    </a>
+    <nav class="header__nav">
+        <a class="header__nav-link header__nav-link--active" th:href="@{/dashboard}">Dashboard</a>
+        <a class="header__nav-link" th:href="@{/swagger-ui.html}">API Docs</a>
+        <a class="header__nav-link" th:href="@{/h2-console/}">Database</a>
+    </nav>
+    <div class="header__user">
+        <button class="header__notification-btn" id="notificationToggle"
+                th:title="'Notifications'">
+            &#128276;
+            <span class="header__badge" th:if="${notificationCount != null and notificationCount > 0}"
+                  th:text="${notificationCount}">3</span>
+        </button>
+        <span class="header__avatar" th:text="${customerInitials != null ? customerInitials : 'U'}">U</span>
+        <span class="header__user-name" th:text="${customerName != null ? customerName : 'User'}">User</span>
+    </div>
+</header>
+
+<main class="main" layout:fragment="content">
+    <p>Page content goes here.</p>
+</main>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

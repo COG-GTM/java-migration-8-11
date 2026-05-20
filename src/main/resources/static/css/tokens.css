@@ -1,0 +1,56 @@
+:root {
+    /* Color Palette */
+    --color-primary: #072146;
+    --color-primary-light: #004481;
+    --color-secondary: #1973B8;
+    --color-teal: #028484;
+    --color-teal-light: #04A59B;
+    --color-success: #48AE64;
+    --color-danger: #DA3B3B;
+    --color-warning: #F5A623;
+    --color-page-bg: #F4F4F4;
+    --color-card-bg: #FFFFFF;
+    --color-header-bg: #072146;
+    --color-text-primary: #333333;
+    --color-text-secondary: #666666;
+    --color-text-white: #FFFFFF;
+    --color-border: #E0E0E0;
+    --color-border-light: #F0F0F0;
+
+    /* Typography */
+    --font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
+    --font-size-h1: 32px;
+    --font-size-h2: 24px;
+    --font-size-h3: 18px;
+    --font-size-body: 14px;
+    --font-size-small: 12px;
+    --font-size-amount-lg: 28px;
+    --font-size-amount: 16px;
+    --font-weight-regular: 400;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Spacing (8px grid) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+
+    /* Shadows */
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-dropdown: 0 4px 24px rgba(0, 0, 0, 0.15);
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 50%;
+
+    /* Layout */
+    --header-height: 64px;
+    --max-content-width: 1440px;
+    --sidebar-width: 280px;
+}
