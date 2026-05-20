@@ -13,4 +13,4 @@ jobs:
       - run: markdownlint-cli2 "README_NEW.md" "CONTRIBUTING.md"
       - run: |
           set -e
-          find . -name "README_NEW.md" -o -name "CONTRIBUTING.md" | xargs -n1 markdown-link-check -q
+          find . -name "README_NEW.md" -o -name "CONTRIBUTING.md" | xargs -n1 markdown-link-check -q -c .mlc_config.json
