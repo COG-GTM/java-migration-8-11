@@ -48,7 +48,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers['X-CSRF-TOKEN'] = csrfToken.value;
             }
 
-            fetch('/bank-api/dashboard/transfer', {
+            var ctxMeta = document.querySelector('meta[name="context-path"]');
+            var contextPath = ctxMeta ? ctxMeta.content.replace(/\/$/, '') : '';
+            fetch(contextPath + '/dashboard/transfer', {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({
