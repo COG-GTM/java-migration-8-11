@@ -24,7 +24,7 @@
                     <div class="balance-card">
                         <span class="balance-card__label">Total Balance</span>
                         <span class="balance-card__amount"
-                              th:text="${#numbers.formatDecimal(totalBalance, 1, 2)}">0.00</span>
+                              th:text="'$' + ${#numbers.formatDecimal(totalBalance, 1, 2)}">0.00</span>
                         <span class="balance-card__account"
                               th:text="${totalAccounts + ' account(s)'}">0 account(s)</span>
                         <span class="balance-card__icon">&#128179;</span>
