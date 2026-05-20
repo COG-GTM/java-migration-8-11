@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<main class="main" layout:fragment="content">
+
+    <h1 class="page-title">Dashboard</h1>
+
+    <div class="dashboard-grid">
+
+        <!-- ============ Balance Overview (MBA-1767) ============ -->
+        <div class="card" id="balanceOverview">
+            <div class="card__header">
+                <span class="card__title">Balance Overview</span>
+                <a class="link" th:href="@{/swagger-ui.html}">View All Accounts</a>
+            </div>
+            <div class="card__body">
+                <div class="balance-overview">
+                    <!-- Total Balance Card -->
+                    <div class="balance-card">
+                        <span class="balance-card__label">Total Balance</span>
+                        <span class="balance-card__amount"
+                              th:text="${#numbers.formatDecimal(totalBalance, 1, 2)}">0.00</span>
+                        <span class="balance-card__account"
+                              th:text="${totalAccounts + ' account(s)'}">0 account(s)</span>
+                        <span class="balance-card__icon">&#128179;</span>
+                    </div>
+                    <!-- Per-account cards -->
+                    <th:block th:each="acct : ${accounts}">
+                        <div th:if="${acct.accountType == 'SAVINGS'}" class="balance-card balance-card--savings">
+                            <span class="balance-card__label" th:text="${acct.accountType}">SAVINGS</span>
+                            <span class="balance-card__amount"
+                                  th:text="'$' + ${#numbers.formatDecimal(acct.accountBalance, 1, 2)}">$0.00</span>
+                            <span class="balance-card__account"
+                                  th:text="'Acct #' + ${acct.accountNumber}">Acct #0000</span>
+                            <span class="balance-card__icon">&#128176;</span>
+                        </div>
+                        <div th:if="${acct.accountType != 'SAVINGS'}" class="balance-card balance-card--checking">
+                            <span class="balance-card__label" th:text="${acct.accountType}">CHECKING</span>
+                            <span class="balance-card__amount"
+                                  th:text="'$' + ${#numbers.formatDecimal(acct.accountBalance, 1, 2)}">$0.00</span>
+                            <span class="balance-card__account"
+                                  th:text="'Acct #' + ${acct.accountNumber}">Acct #0000</span>
+                            <span class="balance-card__icon">&#128179;</span>
+                        </div>
+                    </th:block>
+                </div>
+                <!-- Summary row -->
+                <div class="balance-summary" th:if="${totalIncome != null or totalExpenses != null}">
+                    <div class="balance-summary__item">
+                        <span class="balance-summary__label">Income (Credits)</span>
+                        <span class="balance-summary__value balance-summary__value--positive"
+                              th:text="'+$' + ${#numbers.formatDecimal(totalIncome != null ? totalIncome : 0, 1, 2)}">+$0.00</span>
+                    </div>
+                    <div class="balance-summary__item">
+                        <span class="balance-summary__label">Expenses (Debits)</span>
+                        <span class="balance-summary__value balance-summary__value--negative"
+                              th:text="'-$' + ${#numbers.formatDecimal(totalExpenses != null ? totalExpenses : 0, 1, 2)}">-$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ Two-Column Row ============ -->
+        <div class="dashboard-grid__row dashboard-grid__row--two-col">
+
+            <!-- ============ Transactions List (MBA-1768) ============ -->
+            <div class="card" id="transactionsList">
+                <div class="card__header">
+                    <span class="card__title">Recent Transactions</span>
+                </div>
+                <div class="card__header" style="border-bottom: none; padding-top: 0;">
+                    <div class="filter-bar">
+                        <input class="filter-bar__input" type="text" id="txSearch"
+                               placeholder="Search transactions..."/>
+                        <select class="filter-bar__select" id="txTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="CREDIT">Credits</option>
+                            <option value="DEBIT">Debits</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card__body" style="padding-top: 0;">
+                    <ul class="transaction-list" th:if="${transactions != null and !transactions.isEmpty()}">
+                        <li class="transaction-item" th:each="tx : ${transactions}"
+                            th:attr="data-description=${tx.txType + ' - Account ' + tx.accountNumber},data-type=${tx.txType}">
+                            <span th:if="${tx.txType == 'CREDIT'}" class="transaction-item__icon transaction-item__icon--credit">&#8593;</span>
+                            <span th:if="${tx.txType != 'CREDIT'}" class="transaction-item__icon transaction-item__icon--debit">&#8595;</span>
+                            <div class="transaction-item__details">
+                                <div class="transaction-item__description"
+                                     th:text="${tx.txType + ' Transaction'}">Transaction</div>
+                                <div class="transaction-item__meta">
+                                    <span th:text="'Account #' + ${tx.accountNumber}">Account #0000</span>
+                                    <span th:if="${tx.txDateTime != null}"
+                                          th:text="' &bull; ' + ${#dates.format(tx.txDateTime, 'MMM dd, yyyy HH:mm')}"></span>
+                                </div>
+                            </div>
+                            <span th:if="${tx.txType == 'CREDIT'}" class="transaction-item__amount transaction-item__amount--credit"
+                                  th:text="'+$' + ${#numbers.formatDecimal(tx.txAmount, 1, 2)}">+$0.00</span>
+                            <span th:if="${tx.txType != 'CREDIT'}" class="transaction-item__amount transaction-item__amount--debit"
+                                  th:text="'-$' + ${#numbers.formatDecimal(tx.txAmount, 1, 2)}">-$0.00</span>
+                        </li>
+                    </ul>
+                    <div class="empty-state" th:if="${transactions == null or transactions.isEmpty()}">
+                        <div class="empty-state__icon">&#128203;</div>
+                        <div class="empty-state__message">No transactions yet</div>
+                        <p class="text-muted">Transactions will appear here once transfers are made.</p>
+                    </div>
+                </div>
+                <div class="card__footer" th:if="${transactions != null and transactions.size() > 5}">
+                    <a class="link" href="#">View All Transactions</a>
+                </div>
+            </div>
+
+            <!-- ============ Quick Transfer (MBA-1769) ============ -->
+            <div class="card" id="quickTransfer">
+                <div class="card__header">
+                    <span class="card__title">Quick Transfer</span>
+                </div>
+                <div class="card__body">
+                    <div th:if="${accounts != null and accounts.size() >= 2}">
+                        <form class="transfer-form" id="transferForm">
+                            <div class="form-group">
+                                <label class="form-group__label" for="fromAccount">From Account</label>
+                                <select class="form-group__select" id="fromAccount" name="fromAccount" required="required">
+                                    <option value="">Select source account</option>
+                                    <option th:each="acct : ${accounts}"
+                                            th:value="${acct.accountNumber}"
+                                            th:text="${acct.accountType + ' #' + acct.accountNumber + ' ($' + #numbers.formatDecimal(acct.accountBalance, 1, 2) + ')'}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-group__label" for="toAccount">To Account</label>
+                                <select class="form-group__select" id="toAccount" name="toAccount" required="required">
+                                    <option value="">Select destination account</option>
+                                    <option th:each="acct : ${accounts}"
+                                            th:value="${acct.accountNumber}"
+                                            th:text="${acct.accountType + ' #' + acct.accountNumber + ' ($' + #numbers.formatDecimal(acct.accountBalance, 1, 2) + ')'}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-group__label" for="transferAmount">Amount</label>
+                                <input class="form-group__input form-group__input--amount" type="number"
+                                       id="transferAmount" name="amount" min="0.01" step="0.01"
+                                       placeholder="0.00" required="required"/>
+                            </div>
+                            <div id="transferMessage" style="display:none;"></div>
+                            <button class="btn btn--primary btn--block btn--lg" type="submit">
+                                Transfer Funds
+                            </button>
+                        </form>
+                    </div>
+                    <div class="empty-state" th:if="${accounts == null or accounts.size() &lt; 2}">
+                        <div class="empty-state__icon">&#128184;</div>
+                        <div class="empty-state__message">Multiple accounts required</div>
+                        <p class="text-muted">Create at least two accounts to enable transfers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ Notification Center (MBA-1770) ============ -->
+        <div class="card" id="notificationPanel">
+            <div class="card__header">
+                <span class="card__title">Notifications</span>
+                <span class="text-muted" th:if="${notifications != null}"
+                      th:text="${notifications.size() + ' notification(s)'}">0 notification(s)</span>
+            </div>
+            <div class="card__body">
+                <ul class="notification-list" th:if="${notifications != null and !notifications.isEmpty()}">
+                    <li th:each="notif : ${notifications}"
+                        class="notification-item"
+                        th:attrappend="class=${notif.read} ? '' : ' notification-item--unread'">
+                        <span th:if="${notif.type == 'success'}" class="notification-item__icon notification-item__icon--success">&#10003;</span>
+                        <span th:if="${notif.type == 'warning'}" class="notification-item__icon notification-item__icon--warning">&#9888;</span>
+                        <span th:if="${notif.type == 'danger'}" class="notification-item__icon notification-item__icon--danger">&#10007;</span>
+                        <span th:if="${notif.type == 'info'}" class="notification-item__icon notification-item__icon--info">&#8505;</span>
+                        <div class="notification-item__content">
+                            <div class="notification-item__title" th:text="${notif.title}">Notification</div>
+                            <div class="notification-item__message" th:text="${notif.message}">Details</div>
+                        </div>
+                        <span class="notification-item__time" th:text="${notif.time}">Just now</span>
+                    </li>
+                </ul>
+                <div class="empty-state" th:if="${notifications == null or notifications.isEmpty()}">
+                    <div class="empty-state__icon">&#128276;</div>
+                    <div class="empty-state__message">All caught up!</div>
+                    <p class="text-muted">No new notifications at this time.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>
