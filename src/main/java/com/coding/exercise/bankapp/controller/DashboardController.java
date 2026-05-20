@@ -108,7 +108,7 @@ public class DashboardController {
                         .accountNumber((Long) row[0])
                         .accountType((String) row[1])
                         .accountStatus((String) row[2])
-                        .accountBalance((Double) row[3])
+                        .accountBalance(row[3] != null ? (Double) row[3] : 0.0)
                         .build()));
         return accounts;
     }

@@ -168,10 +168,9 @@ $ curl -u bankapp:changeit -X PUT \
   http://localhost:8989/bank-api/accounts/transfer/1001 \
   -H "Content-Type: application/json" \
   -d '{
-    "fromAccount": 3000,
-    "toAccount": 3001,
-    "amount": 250.00,
-    "transferDescription": "Internal transfer"
+    "fromAccountNumber": 3000,
+    "toAccountNumber": 3001,
+    "transferAmount": 250.00
   }'
 
 # Get transaction history for an account
