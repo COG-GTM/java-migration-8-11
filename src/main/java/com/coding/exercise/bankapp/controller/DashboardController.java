@@ -86,7 +86,6 @@ public class DashboardController {
 
     @PostMapping("/transfer")
     @ResponseBody
-    @Transactional
     public ResponseEntity<TransferResponse> transfer(@RequestBody TransferDetails transferDetails) {
         List<Object[]> names = customerRepository.findAllCustomerNames();
         if (names.isEmpty()) {
