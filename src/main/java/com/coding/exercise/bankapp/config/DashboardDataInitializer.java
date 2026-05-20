@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.coding.exercise.bankapp.model.Account;
@@ -19,6 +20,7 @@ import com.coding.exercise.bankapp.repository.CustomerRepository;
 import com.coding.exercise.bankapp.repository.TransactionRepository;
 
 @Component
+@Profile("!test")
 public class DashboardDataInitializer implements CommandLineRunner {
 
     @Autowired
