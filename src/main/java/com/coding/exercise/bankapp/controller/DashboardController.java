@@ -122,6 +122,7 @@ public class DashboardController {
                     allTransactions.add(bankingServiceHelper.convertToTransactionDomain(tx))));
         }
         allTransactions.sort((a, b) -> {
+            if (a.getTxDateTime() == null && b.getTxDateTime() == null) return 0;
             if (b.getTxDateTime() == null) return -1;
             if (a.getTxDateTime() == null) return 1;
             return b.getTxDateTime().compareTo(a.getTxDateTime());
