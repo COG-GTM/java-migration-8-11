@@ -49,7 +49,7 @@ public class DashboardController {
     @Transactional(readOnly = true)
     public String dashboard(Model model) {
         List<DashboardAccountInfo> accounts = getAllAccounts();
-        List<TransactionDetails> transactions = getAllTransactions();
+        List<TransactionDetails> transactions = getAllTransactions(accounts);
         List<NotificationItem> notifications = buildNotifications(accounts, transactions);
 
         double totalBalance = accounts.stream()
@@ -114,9 +114,8 @@ public class DashboardController {
         return accounts;
     }
 
-    private List<TransactionDetails> getAllTransactions() {
+    private List<TransactionDetails> getAllTransactions(List<DashboardAccountInfo> accounts) {
         List<TransactionDetails> allTransactions = new ArrayList<>();
-        List<DashboardAccountInfo> accounts = getAllAccounts();
         for (DashboardAccountInfo acct : accounts) {
             Optional<List<Transaction>> txOpt = transactionRepository.findByAccountNumber(acct.getAccountNumber());
             txOpt.ifPresent(txList -> txList.forEach(tx ->
