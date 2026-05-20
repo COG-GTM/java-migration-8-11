@@ -22,8 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/dashboard/**").permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
+        httpSecurity.httpBasic();
         httpSecurity.csrf().disable();
         httpSecurity.headers().frameOptions().disable();
     }
