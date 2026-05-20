@@ -20,7 +20,9 @@ import com.coding.exercise.bankapp.domain.NotificationItem;
 import com.coding.exercise.bankapp.domain.TransactionDetails;
 import com.coding.exercise.bankapp.domain.TransferDetails;
 import com.coding.exercise.bankapp.model.Transaction;
+import com.coding.exercise.bankapp.model.CustomerAccountXRef;
 import com.coding.exercise.bankapp.repository.AccountRepository;
+import com.coding.exercise.bankapp.repository.CustomerAccountXRefRepository;
 import com.coding.exercise.bankapp.repository.CustomerRepository;
 import com.coding.exercise.bankapp.repository.TransactionRepository;
 import com.coding.exercise.bankapp.service.BankingServiceImpl;
@@ -38,6 +40,9 @@ public class DashboardController {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private CustomerAccountXRefRepository custAccXRefRepository;
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -87,12 +92,13 @@ public class DashboardController {
     @PostMapping("/transfer")
     @ResponseBody
     public ResponseEntity<TransferResponse> transfer(@RequestBody TransferDetails transferDetails) {
-        List<Object[]> names = customerRepository.findAllCustomerNames();
-        if (names.isEmpty()) {
-            return ResponseEntity.ok(new TransferResponse(false, "No customer found."));
+        Optional<CustomerAccountXRef> xref = custAccXRefRepository.findByAccountNumber(
+                transferDetails.getFromAccountNumber());
+        if (!xref.isPresent()) {
+            return ResponseEntity.ok(new TransferResponse(false, "Account owner not found."));
         }
 
-        Long customerNumber = (Long) names.get(0)[2];
+        Long customerNumber = xref.get().getCustomerNumber();
         ResponseEntity<Object> result = bankingService.transferDetails(transferDetails, customerNumber);
 
         boolean success = result.getStatusCode().is2xxSuccessful();
