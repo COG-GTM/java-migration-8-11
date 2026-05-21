@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="card transactions-card" th:fragment="transactionsList">
+    <div class="card__header">
+        <h2 class="card__title">Movimientos Recientes</h2>
+    </div>
+
+    <!-- Filters -->
+    <div class="transactions-filters">
+        <span class="transactions-filters__label">Filtrar:</span>
+        <select id="filterType" class="filter-select">
+            <option value="">Todos los tipos</option>
+            <option value="CREDIT">Créditos</option>
+            <option value="DEBIT">Débitos</option>
+        </select>
+        <select id="filterAccount" class="filter-select">
+            <option value="">Todas las cuentas</option>
+            <option th:each="account : ${accounts}"
+                    th:value="${account.accountNumber}"
+                    th:text="'****' + ${#strings.substring('' + account.accountNumber, #strings.length('' + account.accountNumber) - 4)}">
+                ****5001
+            </option>
+        </select>
+        <input type="date" id="filterDateFrom" class="filter-input" placeholder="Desde"/>
+        <input type="date" id="filterDateTo" class="filter-input" placeholder="Hasta"/>
+    </div>
+
+    <!-- Table -->
+    <div class="card__body" style="padding: 0;">
+        <table class="transactions-table" id="transactionsTable" th:if="${transactions != null and !transactions.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cuenta</th>
+                    <th>Tipo</th>
+                    <th class="text-right">Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="tx : ${transactions}"
+                    th:attr="data-tx-type=${tx.txType},data-tx-date=${#temporals.format(tx.txDateTime, 'yyyy-MM-dd')},data-account=${tx.accountNumber}">
+                    <td th:text="${#temporals.format(tx.txDateTime, 'dd/MM/yyyy HH:mm')}">21/05/2026 10:30</td>
+                    <td>****<span th:text="${#strings.substring('' + tx.accountNumber, #strings.length('' + tx.accountNumber) - 4)}">5001</span></td>
+                    <td>
+                        <span th:class="'tx-type tx-type--' + ${#strings.toLowerCase(tx.txType)}" th:text="${tx.txType}">CREDIT</span>
+                    </td>
+                    <td class="text-right">
+                        <span th:class="'tx-amount--' + ${#strings.toLowerCase(tx.txType)}"
+                              th:text="${(tx.txType == 'CREDIT' ? '+' : '-') + '$' + #numbers.formatDecimal(tx.txAmount, 1, 'COMMA', 2, 'POINT')}">
+                            +$1,200.00
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="transactions-empty" th:if="${transactions == null or transactions.isEmpty()}">
+            <div class="transactions-empty__icon">&#128196;</div>
+            <p>No hay movimientos recientes</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

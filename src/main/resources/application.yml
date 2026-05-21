@@ -9,3 +9,7 @@ spring:
   h2:
     console:
       enabled: true
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html

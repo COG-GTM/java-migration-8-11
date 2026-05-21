@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="card balance-overview" th:fragment="balanceOverview">
+    <div class="balance-total">
+        <div class="balance-total__label">Posición Total</div>
+        <div class="balance-total__amount">
+            $<span th:text="${#numbers.formatDecimal(totalBalance, 1, 'COMMA', 2, 'POINT')}">25,430.00</span>
+            <span class="balance-total__currency">MXN</span>
+        </div>
+    </div>
+    <div class="balance-accounts">
+        <div th:each="account : ${accounts}" class="balance-account-card">
+            <div class="balance-account-card__type" th:text="${account.accountType}">Checking</div>
+            <div class="balance-account-card__number">
+                ****<span th:text="${#strings.substring('' + account.accountNumber, #strings.length('' + account.accountNumber) - 4)}">5001</span>
+            </div>
+            <div class="balance-account-card__amount">
+                $<span th:text="${#numbers.formatDecimal(account.accountBalance, 1, 'COMMA', 2, 'POINT')}">12,500.00</span>
+            </div>
+            <span th:class="'balance-account-card__status balance-account-card__status--' + ${#strings.toLowerCase(account.accountStatus)}"
+                  th:text="${account.accountStatus}">Active</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

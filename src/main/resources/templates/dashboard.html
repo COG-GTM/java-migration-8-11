@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="context-path" th:content="@{/}"/>
+    <title>BBVA Dashboard — Mi Posición</title>
+    <link rel="stylesheet" th:href="@{/css/variables.css}"/>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
+    <link rel="stylesheet" th:href="@{/css/responsive.css}"/>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/header :: header"></div>
+
+<!-- Main Dashboard Content -->
+<main class="dashboard">
+    <div class="dashboard__welcome">
+        <h1 th:text="'Buenos días, ' + ${customerName}">Buenos días, Maria</h1>
+        <p th:text="${#temporals.format(#temporals.createNow(), 'EEEE d ''de'' MMMM, yyyy')}">Miércoles 21 de Mayo, 2026</p>
+    </div>
+
+    <div class="dashboard__grid">
+        <!-- Balance Overview (full width) -->
+        <div th:replace="fragments/balance-overview :: balanceOverview"></div>
+
+        <!-- Transactions (full width) -->
+        <div th:replace="fragments/transactions-list :: transactionsList"></div>
+
+        <!-- Quick Transfer -->
+        <div th:replace="fragments/quick-transfer :: quickTransfer"></div>
+
+        <!-- Notification Center (inline card) -->
+        <div th:replace="fragments/notification-center :: notificationCard"></div>
+    </div>
+</main>
+
+<!-- Transfer Confirmation Modal -->
+<div th:replace="fragments/transfer-confirmation :: transferConfirmation"></div>
+
+<!-- Toast Container -->
+<div th:replace="fragments/toast :: toastContainer"></div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
