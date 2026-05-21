@@ -173,6 +173,7 @@ function executeTransfer() {
 
     fetch(basePath + '/dashboard/transfer', {
         method: 'POST',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         },
