@@ -1,0 +1,27 @@
+server.port: 0
+server.servlet.context-path: /bank-api
+
+spring:
+  security:
+    user:
+      name: bankapp
+      password: changeit
+  h2:
+    console:
+      enabled: false
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;NON_KEYWORDS=USER
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      mode: always
