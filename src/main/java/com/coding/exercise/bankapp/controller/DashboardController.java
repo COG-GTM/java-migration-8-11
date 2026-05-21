@@ -104,6 +104,11 @@ public class DashboardController {
             return ResponseEntity.badRequest().body(response);
         }
 
+        if (request.getAmount() <= 0) {
+            response.put("message", "Amount must be greater than zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         if (request.getFromAccountNumber().equals(request.getToAccountNumber())) {
             response.put("message", "Source and destination accounts must be different.");
             return ResponseEntity.badRequest().body(response);
