@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -26,7 +24,6 @@ import com.coding.exercise.bankapp.domain.AccountInformation;
 import com.coding.exercise.bankapp.domain.NotificationItem;
 import com.coding.exercise.bankapp.domain.TransactionDetails;
 import com.coding.exercise.bankapp.domain.TransferRequest;
-import com.coding.exercise.bankapp.model.Account;
 import com.coding.exercise.bankapp.model.CustomerAccountXRef;
 import com.coding.exercise.bankapp.service.BankingServiceImpl;
 
@@ -102,26 +99,13 @@ public class DashboardController {
 
         Long customerNumber = (Long) customerRow[2];
 
+        if (request.getFromAccountNumber() == null || request.getToAccountNumber() == null || request.getAmount() == null) {
+            response.put("message", "fromAccountNumber, toAccountNumber, and amount are required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         if (request.getFromAccountNumber().equals(request.getToAccountNumber())) {
             response.put("message", "Source and destination accounts must be different.");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        List<Object[]> fromRows = entityManager.createQuery(
-                "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :num", Object[].class)
-                .setParameter("num", request.getFromAccountNumber())
-                .getResultList();
-        if (fromRows.isEmpty()) {
-            response.put("message", "Source account not found.");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        List<Object[]> toRows = entityManager.createQuery(
-                "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :num", Object[].class)
-                .setParameter("num", request.getToAccountNumber())
-                .getResultList();
-        if (toRows.isEmpty()) {
-            response.put("message", "Destination account not found.");
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -131,7 +115,12 @@ public class DashboardController {
         transferDetails.setToAccountNumber(request.getToAccountNumber());
         transferDetails.setTransferAmount(request.getAmount());
 
-        bankingService.transferDetails(transferDetails, customerNumber);
+        ResponseEntity<Object> result = bankingService.transferDetails(transferDetails, customerNumber);
+
+        if (!result.getStatusCode().is2xxSuccessful()) {
+            response.put("message", String.valueOf(result.getBody()));
+            return ResponseEntity.status(result.getStatusCode()).body(response);
+        }
 
         response.put("message", "Transfer completed successfully!");
         return ResponseEntity.ok(response);

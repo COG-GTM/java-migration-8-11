@@ -225,10 +225,19 @@ function showToast(type, message) {
 
     var toast = document.createElement('div');
     toast.className = 'toast toast--' + type;
-    toast.innerHTML =
-        '<span class="toast__icon">' + (icons[type] || '') + '</span>' +
-        '<span class="toast__message">' + message + '</span>' +
-        '<button class="toast__close" onclick="this.parentElement.remove()">&times;</button>';
+    var iconSpan = document.createElement('span');
+    iconSpan.className = 'toast__icon';
+    iconSpan.innerHTML = icons[type] || '';
+    var msgSpan = document.createElement('span');
+    msgSpan.className = 'toast__message';
+    msgSpan.textContent = message;
+    var closeBtn = document.createElement('button');
+    closeBtn.className = 'toast__close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.onclick = function() { toast.remove(); };
+    toast.appendChild(iconSpan);
+    toast.appendChild(msgSpan);
+    toast.appendChild(closeBtn);
 
     toastContainer.appendChild(toast);
 
