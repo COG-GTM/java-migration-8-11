@@ -39,14 +39,14 @@
             </thead>
             <tbody>
                 <tr th:each="tx : ${transactions}"
-                    th:attr="data-tx-type=${tx.txType},data-tx-date=${#temporals.format(tx.txDateTime, 'yyyy-MM-dd')},data-account=${tx.accountNumber}">
-                    <td th:text="${#temporals.format(tx.txDateTime, 'dd/MM/yyyy HH:mm')}">21/05/2026 10:30</td>
+                    th:attr="data-tx-type=${tx.txType},data-tx-date=${#dates.format(tx.txDateTime, 'yyyy-MM-dd')},data-account=${tx.accountNumber}">
+                    <td th:text="${#dates.format(tx.txDateTime, 'dd/MM/yyyy HH:mm')}">21/05/2026 10:30</td>
                     <td>****<span th:text="${#strings.substring('' + tx.accountNumber, #strings.length('' + tx.accountNumber) - 4)}">5001</span></td>
                     <td>
-                        <span th:class="'tx-type tx-type--' + ${#strings.toLowerCase(tx.txType)}" th:text="${tx.txType}">CREDIT</span>
+                        <span class="tx-type" th:classappend="'tx-type--' + ${#strings.toLowerCase(tx.txType)}" th:text="${tx.txType}">CREDIT</span>
                     </td>
                     <td class="text-right">
-                        <span th:class="'tx-amount--' + ${#strings.toLowerCase(tx.txType)}"
+                        <span th:classappend="'tx-amount--' + ${#strings.toLowerCase(tx.txType)}"
                               th:text="${(tx.txType == 'CREDIT' ? '+' : '-') + '$' + #numbers.formatDecimal(tx.txAmount, 1, 'COMMA', 2, 'POINT')}">
                             +$1,200.00
                         </span>

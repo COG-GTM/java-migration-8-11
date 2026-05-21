@@ -18,7 +18,7 @@
             <div class="balance-account-card__amount">
                 $<span th:text="${#numbers.formatDecimal(account.accountBalance, 1, 'COMMA', 2, 'POINT')}">12,500.00</span>
             </div>
-            <span th:class="'balance-account-card__status balance-account-card__status--' + ${#strings.toLowerCase(account.accountStatus)}"
+            <span class="balance-account-card__status" th:classappend="'balance-account-card__status--' + ${#strings.toLowerCase(account.accountStatus)}"
                   th:text="${account.accountStatus}">Active</span>
         </div>
     </div>

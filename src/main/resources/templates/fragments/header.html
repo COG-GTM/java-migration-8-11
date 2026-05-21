@@ -33,7 +33,7 @@
                     <div th:each="notif : ${notifications}"
                          th:classappend="${notif.read} ? '' : 'notification-item--unread'"
                          class="notification-item">
-                        <div th:class="'notification-item__icon notification-item__icon--' + ${notif.type}">
+                        <div class="notification-item__icon" th:classappend="'notification-item__icon--' + ${notif.type}">
                             <span th:if="${notif.type == 'info'}">&#8505;</span>
                             <span th:if="${notif.type == 'warning'}">&#9888;</span>
                             <span th:if="${notif.type == 'success'}">&#10003;</span>

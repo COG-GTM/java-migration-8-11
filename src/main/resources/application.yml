@@ -13,3 +13,6 @@ spring:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
