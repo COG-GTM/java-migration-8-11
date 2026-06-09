@@ -1,4 +1,4 @@
-# Banking Application using Java 11, Spring Boot, Spring Security and H2 DB
+# Banking Application using Java 11, Spring Boot, Spring Security and MongoDB
 
 RESTful API to simulate simple banking operations. 
 
@@ -41,16 +41,22 @@ https://projectlombok.org/setup/eclipse
 * Java 11 (LTS) - OpenJDK 11 or later
 * Spring Tool Suite 4 or similar IDE
 * [Maven](https://maven.apache.org/) - Dependency Management
+* A running [MongoDB](https://www.mongodb.com/) instance (defaults to `mongodb://localhost:27017/bankapp`)
+
+The quickest way to start MongoDB locally is with Docker:
+
+```
+docker run -d --name bankapp-mongo -p 27017:27017 mongo:6
+```
 
 ### Maven Dependencies
 
 ```
 spring-boot-starter-actuator
-spring-boot-starter-data-jpa
+spring-boot-starter-data-mongodb
 spring-boot-starter-security
 spring-boot-starter-web
 spring-boot-devtools
-h2 - Inmemory database
 lombok - to reduce boilerplate code
 springdoc-openapi-ui - API documentation (OpenAPI 3.0)
 spring-boot-starter-test
@@ -67,14 +73,14 @@ http://localhost:8989/bank-api/swagger-ui.html
 
 ```
 
-## H2 In-Memory Database
+## MongoDB
 
-Make sure to use jdbc:h2:mem:testdb as your jdbc url. If you intend to you use custom database name, please
-define datasource properties in application.yml
+The application connects to MongoDB using the `spring.data.mongodb.uri` property defined in `src/main/resources/application.yml`
+(defaults to `mongodb://localhost:27017/bankapp`). Override it via an environment variable or command line argument to point
+at a different host or database name:
 
 ```
-http://localhost:8989/bank-api/h2-console/
-
+java -jar target/bank-app-1.0.0.jar --spring.data.mongodb.uri=mongodb://<host>:<port>/<database>
 ```
 
 ## Testing the Bank APP Rest Api

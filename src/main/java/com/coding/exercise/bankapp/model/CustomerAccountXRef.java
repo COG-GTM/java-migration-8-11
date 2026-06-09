@@ -1,19 +1,14 @@
 package com.coding.exercise.bankapp.model;
 
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Document(collection = "customer_account_xref")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -21,9 +16,7 @@ import lombok.NoArgsConstructor;
 public class CustomerAccountXRef {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="CUST_ACC_XREF_ID")
-	private UUID id;
+	private String id;
 	
 	private Long accountNumber;
 	

@@ -1,24 +1,16 @@
 package com.coding.exercise.bankapp.model;
 
 import java.util.Date;
-import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Document(collection = "customers")
 @Data
 @Builder
 @AllArgsConstructor
@@ -26,9 +18,7 @@ import lombok.NoArgsConstructor;
 public class Customer {
 
     @Id
-    @GeneratedValue
-    @Column(name="CUST_ID")
-    private UUID id;
+    private String id;
     
     private String firstName;
     
@@ -40,16 +30,12 @@ public class Customer {
     
     private String status;
     
-    @ManyToOne(cascade=CascadeType.ALL)
     private Address customerAddress;
     
-    @OneToOne(cascade=CascadeType.ALL)
     private Contact contactDetails;
     
-    @Temporal(TemporalType.TIME)
 	private Date createDateTime;
 	
-    @Temporal(TemporalType.TIME)
 	private Date updateDateTime;
 	
 }

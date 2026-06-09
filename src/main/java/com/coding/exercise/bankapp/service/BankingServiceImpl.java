@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.coding.exercise.bankapp.domain.AccountInformation;
 import com.coding.exercise.bankapp.domain.CustomerDetails;
@@ -28,7 +27,6 @@ import com.coding.exercise.bankapp.repository.TransactionRepository;
 import com.coding.exercise.bankapp.service.helper.BankingServiceHelper;
 
 @Service
-@Transactional
 public class BankingServiceImpl implements BankingService {
 
 	@Autowired

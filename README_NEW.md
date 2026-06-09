@@ -28,7 +28,7 @@ BankApp is a comprehensive banking simulation application that provides:
 - **Financial Transactions**: Support for deposits, withdrawals, and internal transfers
 - **Transaction History**: Complete audit trail of all financial operations
 - **Interactive Documentation**: Swagger UI for API exploration and testing
-- **Development-Friendly**: H2 in-memory database with web console access
+- **Document Storage**: MongoDB document database for flexible, schema-less persistence
 
 **Target Audience**: Developers learning Spring Boot, system integrators needing banking APIs
 for testing, and students studying enterprise Java application architecture.
@@ -40,6 +40,13 @@ for testing, and students studying enterprise Java application architecture.
 - Java 11 or higher
 - Maven 3.6+ (or use included Maven wrapper)
 - Any modern IDE (Spring Tool Suite, IntelliJ IDEA, Eclipse)
+- A running MongoDB instance (defaults to `mongodb://localhost:27017/bankapp`)
+
+Start MongoDB locally with Docker:
+
+```bash
+$ docker run -d --name bankapp-mongo -p 27017:27017 mongo:6
+```
 
 ### Setup
 
@@ -58,9 +65,6 @@ $ curl -u bankapp:changeit -i http://localhost:8989/bank-api/actuator/health
 
 # Access Swagger documentation
 $ open http://localhost:8989/bank-api/swagger-ui.html
-
-# Access H2 database console (use JDBC URL: jdbc:h2:mem:testdb)
-$ open http://localhost:8989/bank-api/h2-console/
 ```
 
 ## Configuration
@@ -71,8 +75,7 @@ $ open http://localhost:8989/bank-api/h2-console/
 | server.servlet.context-path | No | /bank-api | Base path for all endpoints |
 | spring.security.user.name | No | bankapp | Basic auth username |
 | spring.security.user.password | No | changeit | Basic auth password |
-| spring.h2.console.enabled | No | true | Enable H2 database console |
-| spring.datasource.url | No | jdbc:h2:mem:testdb | H2 database connection URL |
+| spring.data.mongodb.uri | No | mongodb://localhost:27017/bankapp | MongoDB connection URI |
 
 **Configuration Files**:
 
@@ -209,7 +212,7 @@ graph TD
     Security --> Controllers[Controllers]
     Controllers --> Services[Business Logic Layer]
     Services --> Repositories[Data Access Layer]
-    Repositories --> Database[(H2 Database)]
+    Repositories --> Database[(MongoDB)]
     
     Controllers --> CustomerController[Customer Controller]
     Controllers --> AccountController[Account Controller]
@@ -231,8 +234,8 @@ graph TD
 
 - **Controllers**: Handle HTTP requests and responses (`CustomerController`, `AccountController`)
 - **Services**: Implement business logic (`BankingService`, `BankingServiceImpl`)
-- **Repositories**: Data access using Spring Data JPA
-- **Entities**: JPA entities for database mapping (`Customer`, `Account`, `Transaction`)
+- **Repositories**: Data access using Spring Data MongoDB
+- **Documents**: MongoDB documents for database mapping (`Customer`, `Account`, `Transaction`)
 - **DTOs**: Data transfer objects for API communication
 
 ## Development
@@ -276,7 +279,7 @@ $ mvn test
 
 - **Lombok**: Reduces boilerplate code (getters, setters, constructors)
 - **Spring Boot DevTools**: Automatic restart during development
-- **H2 Console**: Database inspection at `/h2-console/`
+- **MongoDB**: Document database (inspect with `mongosh` or MongoDB Compass)
 - **Swagger UI**: API testing at `/swagger-ui.html`
 
 ## Testing
@@ -300,7 +303,7 @@ The application includes Spring Boot integration tests that verify:
 1. Start the application: `mvn spring-boot:run`
 2. Access Swagger UI: <http://localhost:8989/bank-api/swagger-ui.html>
 3. Use the interactive documentation to test API endpoints
-4. Monitor database state via H2 Console: <http://localhost:8989/bank-api/h2-console/>
+4. Inspect database state with `mongosh mongodb://localhost:27017/bankapp`
 
 ## Troubleshooting
 
@@ -310,7 +313,7 @@ The application includes Spring Boot integration tests that verify:
 | ------- | ----- | -------- |
 | Port 8989 already in use | Another app using the port | Change `server.port` or kill process |
 | 401 Unauthorized | Missing or incorrect credentials | Use `bankapp:changeit` for basic auth |
-| H2 Console not accessible | Security configuration issue | Set `spring.h2.console.enabled=true` |
+| Connection refused to MongoDB | MongoDB not running | Start MongoDB (e.g. `docker run mongo:6`) |
 | Maven build fails | Missing Java 11 | Install Java 11 and set `JAVA_HOME` |
 | Swagger UI not loading | Context path configuration | Access via `/bank-api/swagger-ui.html` |
 
@@ -321,14 +324,13 @@ The application includes Spring Boot integration tests that verify:
 - Port: `8989/tcp`
 - Context Path: `/bank-api`
 - Health Check: `/bank-api/actuator/health` (requires basic auth)
-- Database: H2 in-memory (data lost on restart)
+- Database: MongoDB (`mongodb://localhost:27017/bankapp`)
 
 ### Production Deployment
 
 ```bash
 # TODO: Add Dockerfile for containerized deployment
 # TODO: Add docker-compose.yml for multi-service setup
-# TODO: Configure external database (PostgreSQL/MySQL) for production
 
 # Build JAR for deployment
 $ mvn clean package
@@ -337,8 +339,8 @@ $ java -jar target/bank-app-*.jar
 
 ### Environment-Specific Configuration
 
-- Development: Uses H2 in-memory database
-- Production: Configure external database via `spring.datasource.*` properties
+- Development: Uses a local MongoDB instance
+- Production: Point `spring.data.mongodb.uri` at the production MongoDB cluster
 - Security: Change default credentials in production environments
 
 ### Debug Mode
