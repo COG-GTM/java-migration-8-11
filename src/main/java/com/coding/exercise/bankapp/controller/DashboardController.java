@@ -111,68 +111,63 @@ public class DashboardController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        try {
-            @SuppressWarnings("unchecked")
-            List<Double> fromRows = entityManager.createQuery(
-                    "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :an")
-                    .setParameter("an", request.getFromAccountNumber())
-                    .getResultList();
-            if (fromRows.isEmpty()) {
-                response.put("message", "Source account not found.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            @SuppressWarnings("unchecked")
-            List<Double> toRows = entityManager.createQuery(
-                    "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :an")
-                    .setParameter("an", request.getToAccountNumber())
-                    .getResultList();
-            if (toRows.isEmpty()) {
-                response.put("message", "Destination account not found.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            Double fromBalance = fromRows.get(0);
-            if (fromBalance == null || fromBalance < request.getAmount()) {
-                response.put("message", "Insufficient funds in source account.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            entityManager.createQuery(
-                    "UPDATE Account a SET a.accountBalance = a.accountBalance - :amt WHERE a.accountNumber = :an")
-                    .setParameter("amt", request.getAmount())
-                    .setParameter("an", request.getFromAccountNumber())
-                    .executeUpdate();
-
-            entityManager.createQuery(
-                    "UPDATE Account a SET a.accountBalance = a.accountBalance + :amt WHERE a.accountNumber = :an")
-                    .setParameter("amt", request.getAmount())
-                    .setParameter("an", request.getToAccountNumber())
-                    .executeUpdate();
-
-            Date now = new Date();
-            com.coding.exercise.bankapp.model.Transaction debitTx = new com.coding.exercise.bankapp.model.Transaction();
-            debitTx.setAccountNumber(request.getFromAccountNumber());
-            debitTx.setTxAmount(request.getAmount());
-            debitTx.setTxType("DEBIT");
-            debitTx.setTxDateTime(now);
-            entityManager.persist(debitTx);
-
-            com.coding.exercise.bankapp.model.Transaction creditTx = new com.coding.exercise.bankapp.model.Transaction();
-            creditTx.setAccountNumber(request.getToAccountNumber());
-            creditTx.setTxAmount(request.getAmount());
-            creditTx.setTxType("CREDIT");
-            creditTx.setTxDateTime(now);
-            entityManager.persist(creditTx);
-
-            entityManager.flush();
-
-            response.put("message", "Transfer completed successfully!");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("message", "Transfer failed: " + e.getMessage());
-            return ResponseEntity.internalServerError().body(response);
+        @SuppressWarnings("unchecked")
+        List<Double> fromRows = entityManager.createQuery(
+                "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :an")
+                .setParameter("an", request.getFromAccountNumber())
+                .getResultList();
+        if (fromRows.isEmpty()) {
+            response.put("message", "Source account not found.");
+            return ResponseEntity.badRequest().body(response);
         }
+
+        @SuppressWarnings("unchecked")
+        List<Double> toRows = entityManager.createQuery(
+                "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :an")
+                .setParameter("an", request.getToAccountNumber())
+                .getResultList();
+        if (toRows.isEmpty()) {
+            response.put("message", "Destination account not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Double fromBalance = fromRows.get(0);
+        if (fromBalance == null || fromBalance < request.getAmount()) {
+            response.put("message", "Insufficient funds in source account.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        entityManager.createQuery(
+                "UPDATE Account a SET a.accountBalance = a.accountBalance - :amt WHERE a.accountNumber = :an")
+                .setParameter("amt", request.getAmount())
+                .setParameter("an", request.getFromAccountNumber())
+                .executeUpdate();
+
+        entityManager.createQuery(
+                "UPDATE Account a SET a.accountBalance = a.accountBalance + :amt WHERE a.accountNumber = :an")
+                .setParameter("amt", request.getAmount())
+                .setParameter("an", request.getToAccountNumber())
+                .executeUpdate();
+
+        Date now = new Date();
+        com.coding.exercise.bankapp.model.Transaction debitTx = new com.coding.exercise.bankapp.model.Transaction();
+        debitTx.setAccountNumber(request.getFromAccountNumber());
+        debitTx.setTxAmount(request.getAmount());
+        debitTx.setTxType("DEBIT");
+        debitTx.setTxDateTime(now);
+        entityManager.persist(debitTx);
+
+        com.coding.exercise.bankapp.model.Transaction creditTx = new com.coding.exercise.bankapp.model.Transaction();
+        creditTx.setAccountNumber(request.getToAccountNumber());
+        creditTx.setTxAmount(request.getAmount());
+        creditTx.setTxType("CREDIT");
+        creditTx.setTxDateTime(now);
+        entityManager.persist(creditTx);
+
+        entityManager.flush();
+
+        response.put("message", "Transfer completed successfully!");
+        return ResponseEntity.ok(response);
     }
 
     private Object[] getFirstCustomerRow() {
