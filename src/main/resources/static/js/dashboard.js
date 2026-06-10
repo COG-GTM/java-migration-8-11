@@ -169,7 +169,7 @@ function executeTransfer() {
     var amount = document.getElementById('transferAmount').value;
 
     var contextPath = document.querySelector('meta[name="context-path"]');
-    var basePath = contextPath ? contextPath.getAttribute('content') : '/bank-api';
+    var basePath = contextPath ? contextPath.getAttribute('content').replace(/\/+$/, '') : '/bank-api';
 
     fetch(basePath + '/dashboard/transfer', {
         method: 'POST',
