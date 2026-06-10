@@ -10,8 +10,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,6 @@ import com.coding.exercise.bankapp.domain.NotificationItem;
 import com.coding.exercise.bankapp.domain.TransactionDetails;
 import com.coding.exercise.bankapp.domain.TransferRequest;
 import com.coding.exercise.bankapp.model.CustomerAccountXRef;
-import com.coding.exercise.bankapp.service.BankingServiceImpl;
 
 @Controller
 @RequestMapping("dashboard")
@@ -33,9 +32,6 @@ public class DashboardController {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    private BankingServiceImpl bankingService;
 
     @GetMapping
     public String dashboard(Model model) {
@@ -88,6 +84,7 @@ public class DashboardController {
 
     @PostMapping("/transfer")
     @ResponseBody
+    @Transactional
     public ResponseEntity<Map<String, String>> transfer(@RequestBody TransferRequest request) {
         Map<String, String> response = new HashMap<>();
 
@@ -114,21 +111,68 @@ public class DashboardController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        com.coding.exercise.bankapp.domain.TransferDetails transferDetails =
-                new com.coding.exercise.bankapp.domain.TransferDetails();
-        transferDetails.setFromAccountNumber(request.getFromAccountNumber());
-        transferDetails.setToAccountNumber(request.getToAccountNumber());
-        transferDetails.setTransferAmount(request.getAmount());
+        try {
+            @SuppressWarnings("unchecked")
+            List<Double> fromRows = entityManager.createQuery(
+                    "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :an")
+                    .setParameter("an", request.getFromAccountNumber())
+                    .getResultList();
+            if (fromRows.isEmpty()) {
+                response.put("message", "Source account not found.");
+                return ResponseEntity.badRequest().body(response);
+            }
 
-        ResponseEntity<Object> result = bankingService.transferDetails(transferDetails, customerNumber);
+            @SuppressWarnings("unchecked")
+            List<Double> toRows = entityManager.createQuery(
+                    "SELECT a.accountBalance FROM Account a WHERE a.accountNumber = :an")
+                    .setParameter("an", request.getToAccountNumber())
+                    .getResultList();
+            if (toRows.isEmpty()) {
+                response.put("message", "Destination account not found.");
+                return ResponseEntity.badRequest().body(response);
+            }
 
-        if (!result.getStatusCode().is2xxSuccessful()) {
-            response.put("message", String.valueOf(result.getBody()));
-            return ResponseEntity.status(result.getStatusCode()).body(response);
+            Double fromBalance = fromRows.get(0);
+            if (fromBalance == null || fromBalance < request.getAmount()) {
+                response.put("message", "Insufficient funds in source account.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            entityManager.createQuery(
+                    "UPDATE Account a SET a.accountBalance = a.accountBalance - :amt WHERE a.accountNumber = :an")
+                    .setParameter("amt", request.getAmount())
+                    .setParameter("an", request.getFromAccountNumber())
+                    .executeUpdate();
+
+            entityManager.createQuery(
+                    "UPDATE Account a SET a.accountBalance = a.accountBalance + :amt WHERE a.accountNumber = :an")
+                    .setParameter("amt", request.getAmount())
+                    .setParameter("an", request.getToAccountNumber())
+                    .executeUpdate();
+
+            Date now = new Date();
+            com.coding.exercise.bankapp.model.Transaction debitTx = new com.coding.exercise.bankapp.model.Transaction();
+            debitTx.setAccountNumber(request.getFromAccountNumber());
+            debitTx.setTxAmount(request.getAmount());
+            debitTx.setTxType("DEBIT");
+            debitTx.setTxDateTime(now);
+            entityManager.persist(debitTx);
+
+            com.coding.exercise.bankapp.model.Transaction creditTx = new com.coding.exercise.bankapp.model.Transaction();
+            creditTx.setAccountNumber(request.getToAccountNumber());
+            creditTx.setTxAmount(request.getAmount());
+            creditTx.setTxType("CREDIT");
+            creditTx.setTxDateTime(now);
+            entityManager.persist(creditTx);
+
+            entityManager.flush();
+
+            response.put("message", "Transfer completed successfully!");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("message", "Transfer failed: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
         }
-
-        response.put("message", "Transfer completed successfully!");
-        return ResponseEntity.ok(response);
     }
 
     private Object[] getFirstCustomerRow() {
