@@ -1,0 +1,53 @@
+/* Design Tokens — BBVA Mexico Visual Language */
+/* MBA-1811: Design Specification */
+
+:root {
+    /* Color Palette */
+    --color-primary: #004481;
+    --color-secondary: #1973B8;
+    --color-accent: #F8CD51;
+    --color-background: #F4F4F4;
+    --color-surface: #FFFFFF;
+    --color-text-primary: #121212;
+    --color-text-secondary: #666666;
+    --color-text-muted: #999999;
+    --color-success: #28A745;
+    --color-danger: #DC3545;
+    --color-warning: #F5A623;
+    --color-info: #1973B8;
+    --color-border: #E0E0E0;
+    --color-teal: #028484;
+
+    /* Typography */
+    --font-family: 'BentonSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-h1: 700 32px/1.2 var(--font-family);
+    --font-h2: 700 28px/1.25 var(--font-family);
+    --font-h3: 600 20px/1.3 var(--font-family);
+    --font-body: 400 16px/1.5 var(--font-family);
+    --font-body-sm: 400 14px/1.4 var(--font-family);
+    --font-caption: 400 12px/1.4 var(--font-family);
+    --font-button: 600 14px/1 var(--font-family);
+
+    /* Spacing (8px grid) */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+
+    /* Shadows */
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-dropdown: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 50%;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}

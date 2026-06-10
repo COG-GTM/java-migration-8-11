@@ -41,9 +41,9 @@ public class Account {
 	
 	private Double accountBalance;
     
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
 	
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
 	private Date updateDateTime;
 }

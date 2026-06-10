@@ -1,6 +1,7 @@
 package com.coding.exercise.bankapp.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -17,8 +18,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/").permitAll().and()
-                .authorizeRequests().antMatchers("/h2-console/**").permitAll();
+        httpSecurity.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/dashboard").permitAll()
+                .antMatchers("/dashboard/transfer").permitAll()
+                .antMatchers("/css/**", "/js/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                .antMatchers("/error").permitAll()
+                .and()
+                .authorizeRequests().anyRequest().authenticated().and().httpBasic();
 
         httpSecurity.csrf().disable();
         httpSecurity.headers().frameOptions().disable();

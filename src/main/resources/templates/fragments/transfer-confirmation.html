@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="modal-overlay" id="transferConfirmModal" th:fragment="transferConfirmation">
+    <div class="modal">
+        <div class="modal__icon">&#128274;</div>
+        <h3 class="modal__title">Confirmar Transferencia</h3>
+        <div class="modal__details">
+            <div class="modal__detail-row">
+                <span class="modal__detail-label">Cuenta Origen</span>
+                <span class="modal__detail-value" id="confirmFrom">—</span>
+            </div>
+            <div class="modal__detail-row">
+                <span class="modal__detail-label">Cuenta Destino</span>
+                <span class="modal__detail-value" id="confirmTo">—</span>
+            </div>
+            <div class="modal__detail-row">
+                <span class="modal__detail-label">Monto</span>
+                <span class="modal__detail-value" id="confirmAmount">—</span>
+            </div>
+        </div>
+        <div class="modal__actions">
+            <button class="btn btn--secondary" id="cancelTransferBtn">Cancelar</button>
+            <button class="btn btn--primary" id="confirmTransferBtn">Confirmar</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

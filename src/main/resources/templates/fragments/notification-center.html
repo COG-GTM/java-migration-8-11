@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="card" th:fragment="notificationCard">
+    <div class="card__header">
+        <h2 class="card__title">Centro de Notificaciones</h2>
+        <span class="notification-bell__badge"
+              th:if="${unreadNotificationCount != null and unreadNotificationCount > 0}"
+              th:text="${unreadNotificationCount} + ' nuevas'"
+              style="position:static;">3 nuevas</span>
+    </div>
+    <div class="card__body" style="padding: 0;">
+        <div th:each="notif : ${notifications}">
+            <div th:classappend="${notif.read} ? '' : 'notification-item--unread'"
+                 class="notification-item">
+                <div class="notification-item__icon" th:classappend="'notification-item__icon--' + ${notif.type}">
+                    <span th:if="${notif.type == 'info'}">&#8505;</span>
+                    <span th:if="${notif.type == 'warning'}">&#9888;</span>
+                    <span th:if="${notif.type == 'success'}">&#10003;</span>
+                    <span th:if="${notif.type == 'danger'}">&#10007;</span>
+                </div>
+                <div class="notification-item__content">
+                    <div class="notification-item__message" th:text="${notif.message}">Notification message</div>
+                    <div class="notification-item__time" th:text="${notif.timeAgo}">2 min ago</div>
+                </div>
+            </div>
+        </div>
+        <div class="transactions-empty" th:if="${notifications == null or notifications.isEmpty()}"
+             style="padding: 24px;">
+            <p>No hay notificaciones</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

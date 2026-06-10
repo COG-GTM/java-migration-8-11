@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="header" th:fragment="header">
+    <div class="header__brand">
+        <div class="header__logo">BBVA <span>| Dashboard</span></div>
+    </div>
+
+    <nav>
+        <ul class="header__nav">
+            <li class="header__nav-item header__nav-item--active">Mi Posición</li>
+            <li class="header__nav-item">Cuentas</li>
+            <li class="header__nav-item">Transferencias</li>
+            <li class="header__nav-item">Pagos</li>
+        </ul>
+    </nav>
+
+    <div class="header__actions">
+        <!-- Notification Bell -->
+        <div class="notification-bell" id="notificationBell">
+            <span class="notification-bell__icon">&#128276;</span>
+            <span class="notification-bell__badge"
+                  th:if="${unreadNotificationCount != null and unreadNotificationCount > 0}"
+                  th:text="${unreadNotificationCount}">3</span>
+
+            <!-- Notification Dropdown -->
+            <div class="notification-dropdown" id="notificationDropdown">
+                <div class="notification-dropdown__header">
+                    <span class="notification-dropdown__title">Notificaciones</span>
+                    <button class="notification-dropdown__mark-read" id="markAllRead">Marcar todo leído</button>
+                </div>
+                <div class="notification-dropdown__list">
+                    <div th:each="notif : ${notifications}"
+                         th:classappend="${notif.read} ? '' : 'notification-item--unread'"
+                         class="notification-item">
+                        <div class="notification-item__icon" th:classappend="'notification-item__icon--' + ${notif.type}">
+                            <span th:if="${notif.type == 'info'}">&#8505;</span>
+                            <span th:if="${notif.type == 'warning'}">&#9888;</span>
+                            <span th:if="${notif.type == 'success'}">&#10003;</span>
+                            <span th:if="${notif.type == 'danger'}">&#10007;</span>
+                        </div>
+                        <div class="notification-item__content">
+                            <div class="notification-item__message" th:text="${notif.message}">Notification message</div>
+                            <div class="notification-item__time" th:text="${notif.timeAgo}">2 min ago</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-dropdown__footer">
+                    <a href="#">Ver todas las notificaciones</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Avatar -->
+        <div class="header__user">
+            <div class="header__avatar" th:text="${customerInitials}">MC</div>
+            <span th:text="${customerName}">Maria Cruz</span>
+        </div>
+    </div>
+</header>
+</body>
+</html>

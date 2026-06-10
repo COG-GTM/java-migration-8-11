@@ -46,10 +46,10 @@ public class Customer {
     @OneToOne(cascade=CascadeType.ALL)
     private Contact contactDetails;
     
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
 	
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
 	private Date updateDateTime;
 	
 }
