@@ -1,0 +1,2 @@
+Phase 9 COMPLETE: mvn clean verify BUILD SUCCESS; 1 test pass (baseline parity); JDK21 bytecode (major 65); endpoints health/api-docs/swagger 200; migrator removed. Tue Jul  7 18:36:27 UTC 2026
+Phase 9 COMPLETE (rev2): pinned to latest 3.5.x=3.5.16 + springdoc 2.8.17; BUILD SUCCESS; 1 test pass; Snyk 134(base)->10(this); remaining 10 fixable only via SB4.0/no-patch. Tue Jul  7 18:43:38 UTC 2026

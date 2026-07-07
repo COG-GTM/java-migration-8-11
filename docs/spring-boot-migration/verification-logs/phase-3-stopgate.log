@@ -1,0 +1,1 @@
+Phase 3 done: pom upgraded to SB 3.5.5/JDK21; compile fails as expected (javax + WebSecurityConfigurerAdapter). Tue Jul  7 18:28:48 UTC 2026
