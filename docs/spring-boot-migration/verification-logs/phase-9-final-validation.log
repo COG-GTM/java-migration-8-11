@@ -49,9 +49,9 @@
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.coding.exercise.bankapp.BankingApplicationTests
-18:36:04.213 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.coding.exercise.bankapp.BankingApplicationTests]: BankingApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-18:36:04.271 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.coding.exercise.bankapp.BankingApplication for test class com.coding.exercise.bankapp.BankingApplicationTests
-18:36:04.341 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
+18:43:35.240 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.coding.exercise.bankapp.BankingApplicationTests]: BankingApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:43:35.294 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.coding.exercise.bankapp.BankingApplication for test class com.coding.exercise.bankapp.BankingApplicationTests
+18:43:35.364 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -60,20 +60,20 @@
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
 
- :: Spring Boot ::                (v3.5.5)
+ :: Spring Boot ::               (v3.5.16)
 
-2026-07-07T18:36:04.484Z  INFO 63162 --- [           main] c.c.e.bankapp.BankingApplicationTests    : Starting BankingApplicationTests using Java 21.0.11 with PID 63162 (started by ubuntu in /home/ubuntu/repos/Aplicacion-de-Banca-Spring-Boot)
-2026-07-07T18:36:04.485Z  INFO 63162 --- [           main] c.c.e.bankapp.BankingApplicationTests    : No active profile set, falling back to 1 default profile: "default"
-2026-07-07T18:36:05.003Z  INFO 63162 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-07-07T18:36:05.035Z  INFO 63162 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 26 ms. Found 4 JPA repository interfaces.
-2026-07-07T18:36:05.264Z  INFO 63162 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-07-07T18:36:05.348Z  INFO 63162 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:f5d1aa0a-d649-4726-b637-1e03eff647ac user=SA
-2026-07-07T18:36:05.349Z  INFO 63162 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-07-07T18:36:05.370Z  INFO 63162 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-07-07T18:36:05.391Z  INFO 63162 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.26.Final
-2026-07-07T18:36:05.406Z  INFO 63162 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-07-07T18:36:05.518Z  INFO 63162 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-07-07T18:36:05.560Z  INFO 63162 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-07-07T18:43:35.524Z  INFO 82366 --- [           main] c.c.e.bankapp.BankingApplicationTests    : Starting BankingApplicationTests using Java 21.0.11 with PID 82366 (started by ubuntu in /home/ubuntu/repos/Aplicacion-de-Banca-Spring-Boot)
+2026-07-07T18:43:35.525Z  INFO 82366 --- [           main] c.c.e.bankapp.BankingApplicationTests    : No active profile set, falling back to 1 default profile: "default"
+2026-07-07T18:43:36.067Z  INFO 82366 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-07T18:43:36.099Z  INFO 82366 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 25 ms. Found 4 JPA repository interfaces.
+2026-07-07T18:43:36.349Z  INFO 82366 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-07-07T18:43:36.434Z  INFO 82366 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:a8b6e046-7d19-4b55-850e-bb02812ccd0e user=SA
+2026-07-07T18:43:36.435Z  INFO 82366 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-07-07T18:43:36.455Z  INFO 82366 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-07-07T18:43:36.478Z  INFO 82366 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.53.Final
+2026-07-07T18:43:36.492Z  INFO 82366 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-07-07T18:43:36.602Z  INFO 82366 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-07T18:43:36.644Z  INFO 82366 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 2.3.232
@@ -81,20 +81,22 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-07-07T18:36:06.011Z  INFO 63162 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-07-07T18:36:06.040Z  INFO 63162 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-07-07T18:36:06.245Z  WARN 63162 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-07-07T18:36:06.268Z  INFO 63162 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-07-07T18:36:06.472Z  INFO 63162 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
-2026-07-07T18:36:06.705Z  INFO 63162 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:f5d1aa0a-d649-4726-b637-1e03eff647ac'
-2026-07-07T18:36:06.765Z  INFO 63162 --- [           main] c.c.e.bankapp.BankingApplicationTests    : Started BankingApplicationTests in 2.428 seconds (process running for 2.956)
+2026-07-07T18:43:37.116Z  INFO 82366 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-07T18:43:37.147Z  INFO 82366 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-07T18:43:37.351Z  WARN 82366 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-07T18:43:37.372Z  INFO 82366 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-07-07T18:43:37.601Z  INFO 82366 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-07-07T18:43:37.839Z  INFO 82366 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:a8b6e046-7d19-4b55-850e-bb02812ccd0e'
+2026-07-07T18:43:37.900Z  INFO 82366 --- [           main] c.c.e.bankapp.BankingApplicationTests    : Started BankingApplicationTests in 2.541 seconds (process running for 3.066)
+2026-07-07T18:43:37.946Z  WARN 82366 --- [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-07-07T18:43:37.947Z  WARN 82366 --- [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-WARNING: A Java agent has been loaded dynamically (/home/ubuntu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar)
+WARNING: A Java agent has been loaded dynamically (/home/ubuntu/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
 WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.922 s -- in com.coding.exercise.bankapp.BankingApplicationTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.048 s -- in com.coding.exercise.bankapp.BankingApplicationTests
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -104,12 +106,12 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 [INFO] --- maven-jar-plugin:3.4.2:jar (default-jar) @ bank-app ---
 [INFO] Building jar: /home/ubuntu/repos/Aplicacion-de-Banca-Spring-Boot/target/bank-app-1.0.0.jar
 [INFO] 
-[INFO] --- spring-boot-maven-plugin:3.5.5:repackage (repackage) @ bank-app ---
+[INFO] --- spring-boot-maven-plugin:3.5.16:repackage (repackage) @ bank-app ---
 [INFO] Replacing main artifact /home/ubuntu/repos/Aplicacion-de-Banca-Spring-Boot/target/bank-app-1.0.0.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
 [INFO] The original artifact has been renamed to /home/ubuntu/repos/Aplicacion-de-Banca-Spring-Boot/target/bank-app-1.0.0.jar.original
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.522 s
-[INFO] Finished at: 2026-07-07T18:36:07Z
+[INFO] Total time:  5.742 s
+[INFO] Finished at: 2026-07-07T18:43:38Z
 [INFO] ------------------------------------------------------------------------
