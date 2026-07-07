@@ -4,6 +4,13 @@
 # Log file
 *.log
 
+# Maven build output
+target/
+
+# Spring Boot migration artifacts: log files under the migration docs are
+# deliverables and must be tracked despite the *.log rule above.
+!docs/spring-boot-migration/**/*.log
+
 # BlueJ files
 *.ctxt
 
