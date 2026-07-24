@@ -1,5 +1,13 @@
 # Spring Boot Compatibility Analysis: Java 11 Migration
 
+> **Current baseline (updated):** The project now targets **Java 17** and
+> **Spring Boot 3.5.3**. The application has been migrated to the `jakarta.*`
+> namespace and Spring Security 6 (`SecurityFilterChain` + lambda DSL), and
+> SpringDoc has been upgraded to the 2.x
+> `springdoc-openapi-starter-webmvc-ui` starter. See `MIGRATION_NOTES.md` for
+> the full change log. The analysis below documents the earlier
+> 2.1.4 → 2.7.18 (Java 11) upgrade path and is retained for historical context.
+
 ## Executive Summary
 
 This document analyzes the compatibility of Spring Boot 2.1.4.RELEASE with Java 11 and provides a detailed upgrade path to Spring Boot 2.7.18 (the latest 2.x LTS version). The analysis covers breaking changes, affected dependencies, and recommended migration strategies.
