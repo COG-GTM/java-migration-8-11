@@ -37,8 +37,11 @@ Java EE APIs from the `javax.*` namespace to `jakarta.*`.
   `@Bean SecurityFilterChain` using the Spring Security 6 lambda DSL
   (`authorizeHttpRequests` + `requestMatchers` instead of `authorizeRequests` +
   `antMatchers`).
-- Added `PasswordEncoder` (`BCryptPasswordEncoder`) and `AuthenticationManager`
-  beans following Spring Security 6 conventions, and enabled HTTP Basic auth.
+- Enabled HTTP Basic auth. No `PasswordEncoder` / `AuthenticationManager` beans
+  are declared: the app relies on Spring Boot's auto-configured default user
+  (`spring.security.user.*` in `application.yml`). Declaring those beans would
+  suppress the `{noop}` prefix / make `UserDetailsServiceAutoConfiguration` back
+  off, breaking the documented `bankapp` / `changeit` login, so they are omitted.
 
 **SpringDoc / Swagger**:
 - `ApplicationConfig.java` only references the `io.swagger.v3.oas.models` OpenAPI
