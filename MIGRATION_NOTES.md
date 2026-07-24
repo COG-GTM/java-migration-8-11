@@ -1,3 +1,63 @@
+# BankApp Migration Notes
+
+> The current baseline is **Java 17 (LTS)** and **Spring Boot 3.x**. See
+> "Java 11 to 17 / Spring Boot 2.7 to 3.x Migration" below. The original
+> "Java 8 to 11 Migration Notes" are retained afterwards for historical context.
+
+## Java 11 to 17 / Spring Boot 2.7 to 3.x Migration
+
+### Overview
+
+This section summarizes the upgrade of BankApp from Spring Boot 2.7.18 (Java 11)
+to Spring Boot 3.5.16 (Java 17). Spring Boot 3 requires Java 17+ and moves the
+Java EE APIs from the `javax.*` namespace to `jakarta.*`.
+
+### Changes Made
+
+**Build Configuration (`pom.xml`)**:
+- Bumped `spring-boot-starter-parent` from `2.7.18` to `3.5.16`.
+- Changed `java.version` and `maven.compiler.release` from `11` to `17` (also the
+  `maven-compiler-plugin` `<release>`).
+- Updated the `maven-enforcer-plugin` `requireJavaVersion` rule from `[11,)` to `[17,)`.
+- Replaced `org.springdoc:springdoc-openapi-ui:1.6.15` with
+  `org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17` (SpringDoc 2.x is the
+  Spring Boot 3 compatible line).
+- Dropped the pinned `org.glassfish.jaxb:jaxb-runtime:2.3.8` version so the
+  Spring Boot 3 BOM manages a Jakarta-compatible `4.0.x` release.
+
+**Jakarta Namespace**:
+- Changed all `javax.persistence.*` imports to `jakarta.persistence.*` in the
+  entity/model classes (`Account`, `Customer`, `BankInfo`, `Transaction`,
+  `Address`, `Contact`, `CustomerAccountXRef`). No `javax.validation`,
+  `javax.servlet`, or `javax.annotation` imports were present elsewhere in `src/`.
+
+**Spring Security 6 (`SecurityConfig.java`)**:
+- Removed the deprecated `WebSecurityConfigurerAdapter`.
+- Replaced the overridden `configure(HttpSecurity)` method with a
+  `@Bean SecurityFilterChain` using the Spring Security 6 lambda DSL
+  (`authorizeHttpRequests` + `requestMatchers` instead of `authorizeRequests` +
+  `antMatchers`).
+- Enabled HTTP Basic auth. No `PasswordEncoder` / `AuthenticationManager` beans
+  are declared: the app relies on Spring Boot's auto-configured default user
+  (`spring.security.user.*` in `application.yml`). Declaring those beans would
+  suppress the `{noop}` prefix / make `UserDetailsServiceAutoConfiguration` back
+  off, breaking the documented `bankapp` / `changeit` login, so they are omitted.
+
+**SpringDoc / Swagger**:
+- `ApplicationConfig.java` only references the `io.swagger.v3.oas.models` OpenAPI
+  model, which is unchanged between SpringDoc 1.x and 2.x, so no code change was
+  required there. Swagger UI remains available at `/bank-api/swagger-ui.html`.
+
+**CI/CD (`.github/workflows/ci.yml`)**:
+- Updated the build to set up JDK 17 (Temurin) instead of JDK 11.
+
+### Verification
+
+- `mvn clean verify` succeeds on JDK 17 (Temurin): compilation, `spring-boot`
+  repackage, and the `contextLoads` test all pass.
+
+---
+
 # Java 8 to 11 Migration Notes
 
 ## Overview

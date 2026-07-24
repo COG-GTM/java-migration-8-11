@@ -1,5 +1,12 @@
 # Java 11 Migration - Deprecated API Audit Report
 
+> **Update:** The project has since been upgraded to **Java 17 / Spring Boot 3.x**.
+> The two deprecated-API items called out in this audit have been resolved:
+> `WebSecurityConfigurerAdapter` was removed in favour of a `SecurityFilterChain`
+> bean (Spring Security 6), and Springfox/SpringDoc 1.x was replaced with SpringDoc
+> 2.x. All `javax.*` JPA imports were migrated to `jakarta.*`. This report is
+> retained for historical context on the original Java 8 → 11 audit.
+
 **Project:** BankApp (java-migration-8-11)  
 **Audit Date:** December 14, 2025  
 **Current Java Version:** 1.8 (OpenJDK 8u462)  
