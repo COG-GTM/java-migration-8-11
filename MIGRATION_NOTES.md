@@ -9,18 +9,18 @@
 ### Overview
 
 This section summarizes the upgrade of BankApp from Spring Boot 2.7.18 (Java 11)
-to Spring Boot 3.5.3 (Java 17). Spring Boot 3 requires Java 17+ and moves the
+to Spring Boot 3.5.16 (Java 17). Spring Boot 3 requires Java 17+ and moves the
 Java EE APIs from the `javax.*` namespace to `jakarta.*`.
 
 ### Changes Made
 
 **Build Configuration (`pom.xml`)**:
-- Bumped `spring-boot-starter-parent` from `2.7.18` to `3.5.3`.
+- Bumped `spring-boot-starter-parent` from `2.7.18` to `3.5.16`.
 - Changed `java.version` and `maven.compiler.release` from `11` to `17` (also the
   `maven-compiler-plugin` `<release>`).
 - Updated the `maven-enforcer-plugin` `requireJavaVersion` rule from `[11,)` to `[17,)`.
 - Replaced `org.springdoc:springdoc-openapi-ui:1.6.15` with
-  `org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6` (SpringDoc 2.x is the
+  `org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17` (SpringDoc 2.x is the
   Spring Boot 3 compatible line).
 - Dropped the pinned `org.glassfish.jaxb:jaxb-runtime:2.3.8` version so the
   Spring Boot 3 BOM manages a Jakarta-compatible `4.0.x` release.

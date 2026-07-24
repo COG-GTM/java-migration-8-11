@@ -1,7 +1,7 @@
 # Spring Boot Compatibility Analysis: Java 11 Migration
 
 > **Current baseline (updated):** The project now targets **Java 17** and
-> **Spring Boot 3.5.3**. The application has been migrated to the `jakarta.*`
+> **Spring Boot 3.5.16**. The application has been migrated to the `jakarta.*`
 > namespace and Spring Security 6 (`SecurityFilterChain` + lambda DSL), and
 > SpringDoc has been upgraded to the 2.x
 > `springdoc-openapi-starter-webmvc-ui` starter. See `MIGRATION_NOTES.md` for
