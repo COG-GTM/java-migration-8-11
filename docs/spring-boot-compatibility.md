@@ -1,6 +1,38 @@
-# Spring Boot Compatibility Analysis: Java 11 Migration
+# Spring Boot Compatibility Analysis
 
-## Executive Summary
+> **Status (current):** The project now runs on **Java 21** with **Spring Boot 3.5.3**. The
+> Java 21 section below describes the final state. The remainder of this document is the original
+> Java 11 / Spring Boot 2.7 analysis and is retained for history.
+
+## Java 21 / Spring Boot 3.x (Final State)
+
+| Component | Version |
+|-----------|---------|
+| Java | 21 (LTS) |
+| Spring Boot | 3.5.3 |
+| Spring Framework | 6.2.x (managed) |
+| Spring Security | 6.5.x (managed) |
+| Hibernate ORM | 6.6.18.Final (managed) |
+| H2 Database | 2.3.232 (managed) |
+| SpringDoc OpenAPI | 2.8.9 (`springdoc-openapi-starter-webmvc-ui`) |
+
+Spring Boot 2.7.x does not officially support Java 21, so the upgrade to Spring Boot 3.x was
+required. Breaking changes handled:
+
+- **Jakarta EE 9+**: `javax.persistence.*` -> `jakarta.persistence.*` in all entities.
+- **Spring Security 6**: `WebSecurityConfigurerAdapter` removed; replaced with a
+  `SecurityFilterChain` bean using `authorizeHttpRequests`/`requestMatchers` lambda DSL.
+- **SpringDoc 2.x**: `springdoc-openapi-ui` 1.x replaced by `springdoc-openapi-starter-webmvc-ui` 2.x.
+- **JAXB**: `org.glassfish.jaxb:jaxb-runtime` 2.3.x (javax) removed; not needed by the application.
+- **CI**: GitHub Actions workflow builds with JDK 21.
+
+See `MIGRATION_NOTES.md` (Part 1) for the full change list and verification results.
+
+---
+
+## Java 11 Migration Analysis (Historical)
+
+### Executive Summary
 
 This document analyzes the compatibility of Spring Boot 2.1.4.RELEASE with Java 11 and provides a detailed upgrade path to Spring Boot 2.7.18 (the latest 2.x LTS version). The analysis covers breaking changes, affected dependencies, and recommended migration strategies.
 
@@ -38,7 +70,7 @@ Spring Boot 2.1 (released October 2018) was the first version to officially supp
 |--------------|----------------------------|---------------------|
 | Java 11 | 2.1.0.RELEASE | 2.7.18 |
 | Java 17 | 2.5.0.RELEASE | 3.x (requires migration) |
-| Java 21 | 3.1.0 | 3.4.x |
+| Java 21 | 3.1.0 | 3.5.x (adopted: 3.5.3) |
 
 ## Upgrade Path: Spring Boot 2.1.4 to 2.7.18
 
