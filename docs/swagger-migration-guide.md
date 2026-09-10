@@ -1,5 +1,13 @@
 # Springfox to SpringDoc OpenAPI Migration Guide
 
+> **Status (current):** The Springfox -> SpringDoc migration described here has been completed.
+> As part of the Java 21 / Spring Boot 3.5.3 upgrade, the dependency was further changed from
+> `org.springdoc:springdoc-openapi-ui:1.6.15` (Spring Boot 2.x only) to
+> `org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9` (Spring Boot 3.x). No changes to
+> `ApplicationConfig` or the controller annotations were needed for that step. Swagger UI is
+> available at `/bank-api/swagger-ui/index.html` (`/bank-api/swagger-ui.html` redirects) and the
+> OpenAPI document at `/bank-api/v3/api-docs`.
+
 ## Overview
 
 This document provides a comprehensive analysis and migration guide for transitioning from Springfox Swagger to SpringDoc OpenAPI in the BankApp project. This migration is part of the Java 8 to Java 11 upgrade initiative (MBA-766) and is necessary because Springfox is no longer actively maintained and has compatibility issues with Spring Boot 2.6+ and Java 11+.
@@ -344,7 +352,11 @@ After migration, the Swagger UI and API documentation URLs will change:
 
 ## Security Configuration Considerations
 
-The current `SecurityConfig.java` may need updates to allow access to SpringDoc endpoints. Add the following paths to the security configuration:
+The current `SecurityConfig.java` may need updates to allow access to SpringDoc endpoints. Note that
+since the Spring Boot 3 upgrade `SecurityConfig` uses a `SecurityFilterChain` bean with
+`authorizeHttpRequests(...).requestMatchers(...)` instead of the `WebSecurityConfigurerAdapter` /
+`antMatchers` API shown below (which was removed in Spring Security 6). The example is kept for
+historical context:
 
 ```java
 @Override
@@ -508,4 +520,4 @@ public class CustomerDetails {
 
 ## Conclusion
 
-The migration from Springfox to SpringDoc OpenAPI is straightforward for this project due to the limited use of Swagger annotations (only `@Api`, `@ApiOperation`, `@ApiResponse`, and `@ApiResponses`). The absence of `@ApiModel` and `@ApiModelProperty` annotations in the domain classes further simplifies the migration. Following this guide will ensure a smooth transition to SpringDoc OpenAPI with full compatibility for Java 11 and Spring Boot 2.7.x.
+The migration from Springfox to SpringDoc OpenAPI is straightforward for this project due to the limited use of Swagger annotations (only `@Api`, `@ApiOperation`, `@ApiResponse`, and `@ApiResponses`). The absence of `@ApiModel` and `@ApiModelProperty` annotations in the domain classes further simplifies the migration. Following this guide ensured a smooth transition to SpringDoc OpenAPI; the project now uses SpringDoc 2.x with Java 21 and Spring Boot 3.5.x.

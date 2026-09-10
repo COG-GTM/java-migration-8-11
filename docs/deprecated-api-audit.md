@@ -1,4 +1,22 @@
-# Java 11 Migration - Deprecated API Audit Report
+# Deprecated API Audit Report
+
+> **Status (current):** The project now targets **Java 21** and **Spring Boot 3.5.3**. The
+> follow-up items identified in this audit for a Spring Boot 3 upgrade have been resolved:
+>
+> | Item | Resolution |
+> |------|------------|
+> | `WebSecurityConfigurerAdapter` (section 3.2.1) | Replaced by a `SecurityFilterChain` bean using `authorizeHttpRequests` / `requestMatchers` |
+> | `authorizeRequests().antMatchers(...)` | Replaced by lambda-based `authorizeHttpRequests(auth -> auth.requestMatchers(...))` |
+> | `csrf().disable()` / `headers().frameOptions().disable()` | Replaced by lambda forms `csrf(c -> c.disable())`, `headers(h -> h.frameOptions(f -> f.disable()))` |
+> | `javax.persistence` (section 4.2) | Migrated to `jakarta.persistence` |
+> | `javax.xml.bind` / `jaxb-runtime` 2.3.x | Dependency removed (unused; Jakarta EE 9+ incompatible) |
+> | Springfox (section 3.2.2) | Migrated to SpringDoc `springdoc-openapi-starter-webmvc-ui` 2.8.9 |
+> | Logback / Lombok / Guava versions | Managed by Spring Boot 3.5.3 BOM |
+>
+> A `mvn -DskipTests clean verify` on JDK 21 with `-Xlint:all` reports no deprecation warnings in
+> application code. The original Java 8 -> 11 audit follows for history.
+
+## Java 11 Migration - Deprecated API Audit Report (Historical)
 
 **Project:** BankApp (java-migration-8-11)  
 **Audit Date:** December 14, 2025  

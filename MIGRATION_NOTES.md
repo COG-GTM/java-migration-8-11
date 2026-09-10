@@ -1,8 +1,126 @@
-# Java 8 to 11 Migration Notes
+# Migration Notes
+
+## Current State
+
+The BankApp now targets **Java 21 (LTS)** and **Spring Boot 3.5.3**. The project was migrated in two
+phases:
+
+1. Java 8 -> Java 11 (Spring Boot 2.1.4 -> 2.7.18), documented in Part 2 below.
+2. Java 11 -> Java 21 (Spring Boot 2.7.18 -> 3.5.3), documented in Part 1 below.
+
+---
+
+# Part 1: Java 11 / Spring Boot 2.7 to Java 21 / Spring Boot 3 Migration Notes
+
+## Overview
+
+Spring Boot 2.7.x does not officially support Java 21, so running on Java 21 required upgrading to
+Spring Boot 3.x (which requires Java 17+) and performing the associated breaking-change migrations
+(Jakarta EE 9+ namespace, Spring Security 6, Spring Framework 6, Hibernate 6, SpringDoc 2).
+
+## Changes Made
+
+### 1. Build Configuration Updates (`pom.xml`)
+
+- `spring-boot-starter-parent`: `2.7.18` -> `3.5.3`
+- `java.version` and `maven.compiler.release`: `11` -> `21`
+- `maven-compiler-plugin` `<release>`: `11` -> `21`
+- `maven-enforcer-plugin` `requireJavaVersion`: `[11,)` -> `[21,)`
+- `org.springdoc:springdoc-openapi-ui:1.6.15` -> `org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9`
+  (the 1.x artifact only supports Spring Boot 2.x / `javax.*`)
+- Removed `org.glassfish.jaxb:jaxb-runtime:2.3.8`. It targeted the `javax.xml.bind` API, which is
+  incompatible with Jakarta EE 9+. The application does not use JAXB directly and Spring Boot 3
+  manages `jaxb-runtime` 4.x if a dependency needs it, so no replacement was required. Compilation
+  and runtime were verified without it.
+
+### 2. `javax.*` to `jakarta.*` Namespace Migration
+
+All JPA entities under `src/main/java/com/coding/exercise/bankapp/model/` (`Account`, `Address`,
+`BankInfo`, `Contact`, `Customer`, `CustomerAccountXRef`, `Transaction`) now import
+`jakarta.persistence.*` instead of `javax.persistence.*`. No `javax.validation`, `javax.servlet`
+or `javax.annotation` imports existed in main or test sources.
+
+### 3. Spring Security 6 Configuration
+
+`WebSecurityConfigurerAdapter` was removed in Spring Security 6. `SecurityConfig` was rewritten to
+expose a `SecurityFilterChain` bean using the lambda DSL:
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().permitAll())
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+        return httpSecurity.build();
+    }
+}
+```
+
+Behavior is preserved: `/` and `/h2-console/**` are permitted, CSRF is disabled and frame options
+are disabled (required for the H2 console). `anyRequest().permitAll()` is required because
+`authorizeHttpRequests` must cover every request; the previous `authorizeRequests()` configuration
+only declared the two matchers and did not enforce authentication on other endpoints, so this keeps
+the pre-migration behavior (for example `/customers/all` returns 200 without credentials).
+
+### 4. Other API Changes Reviewed
+
+- `ApplicationConfig` (SpringDoc `OpenAPI` bean) is source-compatible with SpringDoc 2.x.
+- Controllers use `io.swagger.v3.oas.annotations.*`, which are unchanged in SpringDoc 2.x.
+- Repositories use Spring Data `CrudRepository`/`JpaRepository` methods that are unchanged.
+- Tests use JUnit 5 (`org.junit.jupiter.api.Test`) and `@SpringBootTest`, which are unchanged.
+- No usages of Spring Framework 6 removed APIs were found in the codebase.
+
+### 5. CI/CD Updates
+
+`.github/workflows/ci.yml` now sets up JDK 21 (Temurin).
+
+## Verification Results (Java 21 / Spring Boot 3.5.3)
+
+**Java Runtime Used**:
+```
+openjdk version "21.0.12" 2026-07-21
+OpenJDK Runtime Environment (build 21.0.12+8-1-22.04-Ubuntu)
+OpenJDK 64-Bit Server VM (build 21.0.12+8-1-22.04-Ubuntu, mixed mode, sharing)
+```
+
+- `mvn clean test` and `mvn -DskipTests clean verify` succeed on Java 21
+- Spring Boot 3.5.3, Hibernate ORM 6.6.18.Final, H2 2.3.232
+- Application starts in ~3.2 seconds with no ERROR log entries
+
+| Endpoint | Status |
+|----------|--------|
+| `/actuator/health` | 200 OK `{"status":"UP"}` |
+| `/customers/all` | 200 OK |
+| `POST /customers/add` | 200 OK ("New Customer created successfully.") |
+| `POST /accounts/add/{customerNumber}` | 200 OK ("New Account created successfully.") |
+| `GET /accounts/{accountNumber}` | 200 OK |
+| `/swagger-ui.html` | 302 -> `/swagger-ui/index.html` (200) |
+| `/v3/api-docs` | 200 OK |
+| `/h2-console/` | 200 OK |
+
+## Rollback Plan
+
+Revert the Spring Boot 3 migration commit(s): restore `spring-boot-starter-parent` 2.7.18, Java 11
+properties, `springdoc-openapi-ui` 1.6.15, `jaxb-runtime` 2.3.8, `javax.persistence` imports, the
+`WebSecurityConfigurerAdapter`-based `SecurityConfig`, and JDK 11 in the CI workflow.
+
+---
+
+# Part 2: Java 8 to 11 Migration Notes (Historical)
 
 ## Overview
 
 This document summarizes the changes made to migrate the BankApp from Java 8 to Java 11 (LTS).
+These notes are retained for history; the project has since moved on to Java 21 / Spring Boot 3
+(see Part 1).
 
 ## Changes Made
 
@@ -150,4 +268,5 @@ If rollback to Java 8 is needed:
 - Documentation updated
 - Migration notes created
 
-The migration is complete and the application is ready for production deployment on Java 11.
+The Java 11 migration was completed and later superseded by the Java 21 / Spring Boot 3 migration
+described in Part 1.
