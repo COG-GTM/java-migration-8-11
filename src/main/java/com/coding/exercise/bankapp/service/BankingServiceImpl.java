@@ -250,8 +250,17 @@ public class BankingServiceImpl implements BankingService {
 			}
 
 			
+			Double transferAmount = transferDetails.getTransferAmount();
+			if(transferAmount == null || transferAmount.isNaN() || transferAmount.isInfinite() || transferAmount <= 0) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Transfer amount must be a positive number.");
+			}
+
+			if(fromAccountEntity.getAccountNumber().equals(toAccountEntity.getAccountNumber())) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("From and To account numbers must differ.");
+			}
+
 			// if not sufficient funds, return 400 Bad Request
-			if(fromAccountEntity.getAccountBalance() < transferDetails.getTransferAmount()) {
+			if(fromAccountEntity.getAccountBalance() < transferAmount) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient Funds.");
 			}
 			else {
